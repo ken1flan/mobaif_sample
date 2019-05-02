@@ -24,4 +24,4 @@ RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs SoftbankEncode
 RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs HTMLFast
 
 # Run
-# CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
