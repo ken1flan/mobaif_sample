@@ -30,6 +30,18 @@ $ docker exec -it moba bash
 $ exit
 ```
 
+### コンテナの一時停止
+
+```bash
+$ docker pause moba
+```
+
+### コンテナの一時停止からの再開
+
+```bash
+$ docker unpause moba
+```
+
 ### コンテナの再開
 
 ```bash
