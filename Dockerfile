@@ -22,6 +22,7 @@ RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs MTemplate
 RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs Mcode
 RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs SoftbankEncode
 RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs HTMLFast
+RUN echo "Include /usr/local/lib/mobalog/conf/httpd.conf" >>  /etc/httpd/conf/httpd.conf
 
 # Run
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+# CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
