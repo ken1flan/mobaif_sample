@@ -12,16 +12,16 @@ $ docker build -t moba .
 
 ### コンテナの作成、実行
 
-`moba`という名前をつけて、カレントディレクトリをマウントしています。
+`mobalog`という名前をつけて、カレントディレクトリをマウントしています。
 
 ```bash
-$ docker run --name moba -v $(pwd):/usr/local/moba -p 8080:80 -itd moba
+$ docker run --name moba -v $(pwd):/usr/local/lib/mobalog -p 8080:80 -itd moba
 ```
 
 ### コンテナで作業
 
 ```bash
-$ docker attach moba
+$ docker exec -it moba bash
 ```
 
 ### コンテナから出る
@@ -42,7 +42,6 @@ $ docker start moba
 $ docker ps -a
 ```
 
-
 ### コンテナの破棄
 
 ```bash
@@ -59,4 +58,16 @@ $ docker images
 
 ```bash
 $ docker rmi moba
+```
+
+### イメージの履歴
+
+```bash
+$ docker history moba
+```
+
+### イメージの変更を戻す
+
+```bash
+$ docker tag 1607065afa42 moba:latest
 ```
