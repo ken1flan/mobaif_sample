@@ -6,8 +6,7 @@ RUN yum groupinstall -y "Development Tools"
 # apache
 RUN yum install -y httpd
 RUN yum install -y mod_fcgid
-RUN useradd -U -s /sbin/nologin httpd
-RUN mkdir /var/log/mobalog && chown httpd:httpd /var/log/mobalog
+RUN mkdir /var/log/mobalog && chown apache:apache /var/log/mobalog
 EXPOSE 80
 
 # perl
