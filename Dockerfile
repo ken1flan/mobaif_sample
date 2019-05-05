@@ -13,6 +13,7 @@ EXPOSE 80
 RUN yum install -y perl  # TODO: latest
 RUN yum install -y perl-devel
 RUN yum install -y perl-App-cpanminus
+RUN cpanm CGI::Fast
 
 # mobasif
 RUN wget -P /tmp https://github.com/ken1flan/mobaif_sample/archive/master.zip
