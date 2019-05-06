@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPT="-fPIC -O2 -Wuninitialized -march=i686 "
+OPT="-fPIC -O2 -Wuninitialized"
 
 rm -f *.o
 rm -f libmcode.a
