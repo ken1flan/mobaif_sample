@@ -87,5 +87,5 @@ $ docker tag 1607065afa42 moba:latest
 ### apache ログ監視
 
 ```bash
-$ docker exec tail -f /var/log/mobalog/error_log
+$ docker exec moba tail -f /var/log/mobalog/error_log
 ```
