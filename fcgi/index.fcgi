@@ -10,9 +10,22 @@ use DA;
 use Page::Main;
 use Util::Die;
 
+# サンプル
+# use CGI::Fast;
+#
+# while (my $q = CGI::Fast->new) {
+#     print("Content-Type: text/plain\n\n");
+#     foreach $var (sort(keys(%ENV))) {
+#     $val = $ENV{$var};
+#     $val =~ s|\n|\\n|g;
+#     $val =~ s|"|\\"|g;
+#     print "${var}=\"${val}\"\n";
+#   }
+# }
+
 srand($$);
 
-our $RESTART_TIME = time() + 300 + rand(120); # 再起動時刻(5~7分)
+our $RESTART_TIME = time() + 300 + rand(120); # 5?7分
 our $FCGI_REQ     = undef;
 
 our $TERM = 0;
