@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use FCGI;
+use CGI::Fast;
 use Time::HiRes;
 
 use strict;
@@ -10,23 +10,10 @@ use DA;
 use Page::Main;
 use Util::Die;
 
-# サンプル
-# use CGI::Fast;
-#
-# while (my $q = CGI::Fast->new) {
-#     print("Content-Type: text/plain\n\n");
-#     foreach $var (sort(keys(%ENV))) {
-#     $val = $ENV{$var};
-#     $val =~ s|\n|\\n|g;
-#     $val =~ s|"|\\"|g;
-#     print "${var}=\"${val}\"\n";
-#   }
-# }
-
 srand($$);
 
-our $RESTART_TIME = time() + 300 + rand(120); # 5?7分
-our $FCGI_REQ     = undef;
+our $RESTART_TIME = time() + 300 + rand(120); # 5-7分
+our $CGI_FAST = undef;
 
 our $TERM = 0;
 
@@ -35,8 +22,7 @@ eval {
 
 	DA::release();
 
-	$FCGI_REQ = FCGI::Request();
-	while ($FCGI_REQ->Accept() >= 0) {
+  while (my $q = CGI::Fast->new) {
 		local $SIG{'HUP'}  =
 		local $SIG{'USR1'} =
 		local $SIG{'TERM'} =
@@ -47,11 +33,11 @@ eval {
 
 		DA::release();
 
-		$FCGI_REQ->Finish();
+		# $FCGI_REQ->Finish();
 
 		$TERM = 1 if (time() > $RESTART_TIME);
 		last if ($TERM);
-	}
+  }
 };
 
 if ($@) {
