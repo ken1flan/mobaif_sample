@@ -1,11 +1,12 @@
 #!/usr/bin/perl
+BEGIN { $ENV{MOBA_DIR} = '..'; }
+
 use FCGI;
 use Time::HiRes;
 
 use strict;
 
-# use MobaConf;
-$ENV{MOBA_DIR} = "/usr/local/lib/mobalog";
+use MobaConf;
 my $config_file = "$ENV{MOBA_DIR}/conf/main.conf";
 require $config_file;
 
