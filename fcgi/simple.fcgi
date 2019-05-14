@@ -4,6 +4,8 @@ use Time::HiRes;
 
 use strict;
 
+use MobaConf;
+
 my $count = 0;
 my $request = FCGI::Request();
 
