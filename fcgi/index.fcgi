@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+BEGIN { $ENV{MOBA_DIR} = '..'; }
 
 use FCGI;
 use Time::HiRes;
