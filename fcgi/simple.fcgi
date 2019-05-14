@@ -2,6 +2,8 @@
 use FCGI;
 use Time::HiRes;
 
+use strict;
+
 my $count = 0;
 my $request = FCGI::Request();
 
