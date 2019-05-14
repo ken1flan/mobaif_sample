@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use FCGI;
+use Time::HiRes;
 
 my $count = 0;
 my $request = FCGI::Request();
