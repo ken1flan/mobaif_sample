@@ -1,14 +1,14 @@
-grant all privileges on *.* to mobalog_w@"%";
-grant all privileges on *.* to mobalog_w@"localhost";
-grant select         on *.* to mobalog_r@"%";
-grant select         on *.* to mobalog_r@"localhost";
+grant all privileges on *.* to ###PROJ_NAME###_w@"%";
+grant all privileges on *.* to ###PROJ_NAME###_w@"localhost";
+grant select         on *.* to ###PROJ_NAME###_r@"%";
+grant select         on *.* to ###PROJ_NAME###_r@"localhost";
 
 #---------------------------------------------------------------------
 # user db
 
-drop   database if exists mobalog_user;
-create database           mobalog_user;
-use                       mobalog_user;
+drop   database if exists ###PROJ_NAME###_user;
+create database           ###PROJ_NAME###_user;
+use                       ###PROJ_NAME###_user;
 
 create table user_data (
   user_id       int         unsigned not null, # ¥æ¡¼¥¶ID
@@ -31,9 +31,9 @@ alter table user_data
 #---------------------------------------------------------------------
 # sequence db
 
-drop   database if exists mobalog_seq;
-create database           mobalog_seq;
-use                       mobalog_seq;
+drop   database if exists ###PROJ_NAME###_seq;
+create database           ###PROJ_NAME###_seq;
+use                       ###PROJ_NAME###_seq;
 
 create table seq_user (id int unsigned not null) type=MyISAM;
 insert into  seq_user values (10000);
