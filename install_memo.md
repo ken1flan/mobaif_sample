@@ -84,6 +84,12 @@ $ docker history moba
 $ docker tag 1607065afa42 moba:latest
 ```
 
+### apache 起動
+
+```bash
+$ docker exec -it moba /usr/sbin/httpd -D FOREGROUND
+```
+
 ### apache ログ監視
 
 ```bash
