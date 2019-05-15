@@ -15,7 +15,7 @@ $ docker build -t moba .
 `mobalog`という名前をつけて、カレントディレクトリをマウントしています。
 
 ```bash
-$ docker run --name moba -v $(pwd):/usr/local/lib/mobalog -p 8080:80 -itd moba
+$ docker run --name moba -v $(pwd):/usr/local/lib/mobalog -p 80:80 -itd moba
 ```
 
 ### コンテナで作業
