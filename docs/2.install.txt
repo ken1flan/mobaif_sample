@@ -62,7 +62,7 @@ exit
 * 設定値の置換
 
 cd $MOBA_DIR/conf
-find . -type f | xargs sed -i s:###MOBA_DIR###:$MOBA_DIR:g;
+find . -type f | xargs sed -i s:/usr/local/lib/mobalog:$MOBA_DIR:g;
 find . -type f | xargs sed -i s/###PROJ_NAME###/{DB基本名}/g;
 find . -type f | xargs sed -i s/###USER###/$USER/g;
 find . -type f | xargs sed -i s/###GROUP###/{実行GROUP}/g;
