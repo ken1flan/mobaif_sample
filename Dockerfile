@@ -15,6 +15,13 @@ RUN yum install -y perl-devel
 RUN yum install -y perl-App-cpanminus
 RUN cpanm CGI::Fast
 RUN cpanm DBI
+RUN cpanm DBD::mysql
+
+# mysql
+RUN yum install -y mariadb
+RUN yum install -y mariadb-devel
+RUN yum install -y mariadb-server
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 # mobasif
 RUN wget -P /tmp https://github.com/ken1flan/mobaif_sample/archive/master.zip
@@ -29,3 +36,4 @@ RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 
 # Run
 # CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+# CMD ["/usr/bin/mysqld_safe"]
