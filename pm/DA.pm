@@ -31,14 +31,14 @@ our $CONNECT_TIMEOUT = 10;
 
 sub getHandle {
 	my $name = shift;
-	
+
 	if (!$CONF{$name}) {
 		MException::error("no database configuration for $name",
 			{ CODE => 4001 } );
 	}
-	
+
 	my $do_connect = 1;
-	
+
 	if ($DBH{$name}) {
 		$do_connect = 0;
 		if (!$USE{$name}) {
@@ -58,14 +58,14 @@ sub getHandle {
 }
 sub _connect {
 	my $name = shift;
-	
+
 	my $ac = $CONF{$name}->{TX} ? 0 : 1;
-	
+
 	my $dbh = DBI->connect(
-		"dbi:mysql:dbname=$CONF{$name}->{DB}".
+		"DBI:MariaDB:dbname=$CONF{$name}->{DB}".
 		";host=$CONF{$name}->{HOST}".
-		";mysql_connect_timeout=$CONNECT_TIMEOUT",
-		
+		";mariadb_connect_timeout=$CONNECT_TIMEOUT",
+
 		"$CONF{$name}->{USER}", "$CONF{$name}->{PASS}",
 		{ RaiseError => 1, PrintError => 0, AutoCommit => $ac, Warn => 0 });
 	if (!$dbh) {
@@ -79,7 +79,7 @@ sub _connect {
 	$dbh->{mysql_auto_reconnect}    = 0;
 	$dbh->{mysql_client_found_rows} = 1;
 	eval { $dbh->do('set names binary'); };
-	
+
 	return $dbh;
 }
 
@@ -102,7 +102,7 @@ sub reset {
 
 sub disconnect {
 	my $tgt_dbh = shift;
-	
+
 	my @err;
 	for my $name (keys(%USE)) {
 		my $dbh = $DBH{$name};
@@ -124,7 +124,7 @@ sub disconnect {
 
 sub release {
 	my $tgt_dbh = shift;
-	
+
 	my @err;
 	for my $name (keys(%USE)) {
 		my $dbh = $DBH{$name};
@@ -164,27 +164,27 @@ sub rollback {
 # 接続中の全 DB ハンドルを commit
 
 sub commit {
-	
+
 	# commit 対象
-	
+
 	my @tgtdb;
 	for my $name (sort keys %USE) {
 		my $dbh = $DBH{$name};
 		next if (!$dbh || $dbh->{AutoCommit});
 		push(@tgtdb, $name);
 	}
-	
+
 	# commit 前に ping
-	
+
 	for my $name (@tgtdb) {
 		if (!$DBH{$name}->ping) {
 			MException::error("commit error: $name",
 				{ CODE => 4003, DBIERR => $DBI::err, MSG => $DBI::errstr });
 		}
 	}
-	
+
 	# commit
-	
+
 	my %done;
 	for my $name (@tgtdb) {
 		eval {

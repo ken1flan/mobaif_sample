@@ -16,6 +16,7 @@ RUN yum install -y perl-App-cpanminus
 RUN cpanm CGI::Fast
 RUN cpanm DBI
 RUN cpanm DBD::mysql
+RUN cpamn DBD::MariaDB
 
 # mysql
 RUN yum install -y mariadb
