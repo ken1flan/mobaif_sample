@@ -93,5 +93,17 @@ $ docker exec -it moba /usr/sbin/httpd -D FOREGROUND
 ### apache ログ監視
 
 ```bash
-$ docker exec moba tail -f /var/log/mobalog/error_log
+$ docker exec moba tail -f /usr/local/lib/mobalog/data/log/error_log
+```
+
+### mariadb 起動
+
+```bash
+$ docker exec -it moba /usr/bin/mysqld_safe
+```
+
+### mobasif ログ監視
+
+```bash
+docker exec moba tail -f /usr/local/lib/mobalog/data/log/fcgi.err.log.$(date +%Y%m%d)
 ```
