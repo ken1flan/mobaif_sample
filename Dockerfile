@@ -9,20 +9,19 @@ RUN yum install -y mod_fcgid
 RUN mkdir /var/log/mobalog && chown apache:apache /var/log/mobalog
 EXPOSE 80
 
+# mysql
+RUN yum install -y mariadb
+RUN yum install -y mariadb-devel
+RUN yum install -y mariadb-server
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
+
 # perl
 RUN yum install -y perl  # TODO: latest
 RUN yum install -y perl-devel
 RUN yum install -y perl-App-cpanminus
 RUN cpanm CGI::Fast
 RUN cpanm DBI
-RUN cpanm DBD::mysql
-RUN cpamn DBD::MariaDB
-
-# mysql
-RUN yum install -y mariadb
-RUN yum install -y mariadb-devel
-RUN yum install -y mariadb-server
-RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
+RUN cpanm DBD::MariaDB
 
 # mobasif
 RUN wget -P /tmp https://github.com/ken1flan/mobaif_sample/archive/master.zip
