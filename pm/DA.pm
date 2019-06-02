@@ -76,8 +76,7 @@ sub _connect {
 		MException::error("can't set AutoCommit=0",
 			{ CODE => 4002, DBIERR => $DBI::err, MSG => $DBI::errstr });
 	}
-	$dbh->{mysql_auto_reconnect}    = 0;
-	$dbh->{mysql_client_found_rows} = 1;
+	$dbh->{mariadb_auto_reconnect}    = 0;
 	eval { $dbh->do('set names binary'); };
 
 	return $dbh;
