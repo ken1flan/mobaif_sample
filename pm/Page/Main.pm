@@ -32,65 +32,66 @@ $_::MCODE = new Mcode($_::MCODE_DIR);
 
 sub main {
 	my $t1 = Time::HiRes::time();
-	
+
 	#-------------------------
 	# 初期化
-	
+
 	my $func = '';
-	
+
 	eval {
 		DA::reset();
-		
+		MLog::write("$_::LOG_DIR/debug", "after DA::reset()");
+
 		MobileEnv::set();       # モバイル用環境変数を設定
 		$_::F = new Request();  # リクエストパラメータを取得
 		$_::U = new UserData(); # ユーザ情報を取得
-		
+
 		$func = $_::F->{f};
 		$func = $_::DEFAULT_PAGE if ($func =~ /^\./);
 		$func = $_::DEFAULT_PAGE if ($func eq '');
 		$func = '.404'           if (!exists($_::PAGE{$func}));
-		
+
 		#-------------------------------
 		# 処理ホスト名取得（Request.pm の make(SSL)BasePath で使われる）
-		
+
 		$ENV{MB_REQUIRED_PROTO} = '';
 		$ENV{MB_REQUIRED_HOST}  = '';
-		
+
 		#-------------------------------
 		# 処理ホスト名チェック
-		
-		my $proto = $ENV{MB_SSL} ? 'https' : 'http';
-		if ($_::BYPASS_FUNC{$func} < 1 &&
-			(
-			($ENV{MB_REQUIRED_PROTO} &&
-			 $ENV{MB_REQUIRED_PROTO} ne $proto)
-			||
-			($ENV{MB_REQUIRED_HOST} &&
-			 $ENV{MB_REQUIRED_HOST} ne $ENV{SERVER_NAME})
-			)
-		) {
-			redirectToRightDomain();
-			goto FUNC_END;
-		}
-		
+
+		# my $proto = $ENV{MB_SSL} ? 'https' : 'http';
+		# if ($_::BYPASS_FUNC{$func} < 1 &&
+		# 	(
+		# 	($ENV{MB_REQUIRED_PROTO} &&
+		# 	 $ENV{MB_REQUIRED_PROTO} ne $proto)
+		# 	||
+		# 	($ENV{MB_REQUIRED_HOST} &&
+		# 	 $ENV{MB_REQUIRED_HOST} ne $ENV{SERVER_NAME})
+		# 	)
+		# ) {
+		# 	redirectToRightDomain();
+		# 	goto FUNC_END;
+		# }
+
 		#-------------------------------
 		# 接続元チェック除外
-		
+
 		if ($_::BYPASS_FUNC{$func} >= 2) {
 			goto FUNC_START;
 		}
-		
+
 		#-------------------------------
 		# PC リダイレクト
-		
-		if ($ENV{MB_CARRIER_UA} eq '-') {
-			redirectToRightDomain();
-			goto FUNC_END;
-		}
-		
+
+		# if ($ENV{MB_CARRIER_UA} eq '-') {
+		# 	redirectToRightDomain();
+		# 	goto FUNC_END;
+		# }
+
 		#-------------------------------
 		# 携帯UAがキャリアGW以外のIPからアクセスしてきた場合
-		
+
 		if ($ENV{MB_CARRIER_UA} ne $ENV{MB_CARRIER_IP} &&
 			$ENV{MB_CARRIER_UA} ne '-' &&
 			$ENV{MB_CARRIER_IP} ne 'I' && # 社内
@@ -98,44 +99,44 @@ sub main {
 			$func = '.noprx';
 			goto FUNC_START;
 		}
-		
+
 		#---------------------------
 		# サポート外機種
-		
+
 		if ($ENV{MB_SERV_LV} == -1) {
 			if (!$_::NOSUP_OK_FUNC{$func}) {
 				$func = '.nosup';
 				goto FUNC_START;
 			}
 		}
-		
+
 		#-------------------------------
 		# 登録機種情報とアクセス機種情報が異なる場合
-		
+
 		if ($_::U->{USER_ID} &&
 			$_::U->{REG_MODEL} ne $ENV{MB_MODEL_NAME}) {
 			Func::User::updateModel(
 				$_::U->{USER_ID}, $_::U->{REG_MODEL});
 			DA::commit();
 		}
-		
+
 		#-------------------------------
 		# リダイレクト
-		
+
 		if ($_::BYPASS_FUNC{$func} >= 1) { # リダイレクト除外
 			goto FUNC_START;
 		}
-		
+
 		#-------------------------------
 		# URL埋め込み情報
-		
-		if ($_::U->{URL_INFO} &&
-			$_::U->{URL_INFO} ne $_::U->{URL_INFO_C}) {
-			redirectToRightDomain();
-			goto FUNC_END;
-		}
+
+		# if ($_::U->{URL_INFO} &&
+		# 	$_::U->{URL_INFO} ne $_::U->{URL_INFO_C}) {
+		# 	redirectToRightDomain();
+		# 	goto FUNC_END;
+		# }
 	};
-	
+
 	if ($@) {
 		my $e   = MException::getInfo();
 		my $msg = MException::makeMsg($e);
@@ -148,18 +149,21 @@ sub main {
 		Page::Base::pageError($e);
 		goto FUNC_END;
 	}
-	
+
 	#---------------------------
 	# 指定機能をコール
-	
+
 FUNC_START:
-	
+
 	while (1) {
-		
+		MLog::write("$_::LOG_DIR/debug", "loop start");
+
 		eval {
+		  MLog::write("$_::LOG_DIR/debug", "before callPage($func)");
 			callPage($func);
+		  MLog::write("$_::LOG_DIR/debug", "after callPage($func)");
 		};
-		
+
 		if ($@) {
 			my $e = MException::getInfo();
 			eval { DA::rollback(); };
@@ -183,48 +187,55 @@ FUNC_START:
 				last;
 			}
 		}
+		MLog::write("$_::LOG_DIR/debug", "loop end");
 		last;
 	}
-	
+
 FUNC_END:
-	
+
 	DA::release();
+	MLog::write("$_::LOG_DIR/debug", "after DA::release()");
 }
 
 #---------------------------------------------------------------------
 
 sub callPage {
 	my $func = shift;
-	
+	MLog::write("$_::LOG_DIR/debug", "start callPage($func)");
+
 	#---------------------------
 	# 要求されたページ情報を取得
-	
+
 	my ($reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName)
 		= @{$_::PAGE{$func}};
-	
+	MLog::write("$_::LOG_DIR/debug", "Page infomation $reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName");
+
 	#---------------------------
 	# UID_ST 端末情報エラー
-	
+
 	if ($_::U->{UID_ST} < $reqUidSt) {
+		MLog::write("$_::LOG_DIR/debug", "Error UID_ST");
 		if ($ENV{MB_CARRIER_UA} eq 'D' &&
 			$ENV{REQUEST_URI} !~ /[\?\&]guid=ON/) {
 			MException::throw({ REDIRECT2 => 1 });
 		}
 		MException::throw({ CHG_FUNC => '.nouid' });
 	}
-	
+
 	#---------------------------
 	# SERV_ST サービスステータスチェック
-	
+
 	if ($_::U->{SERV_ST} & $reqServSt) {
+		MLog::write("$_::LOG_DIR/debug", "Error SERV_ST");
 		$_::U->{SERV_ST_ERR} = $_::U->{SERV_ST} & $reqServSt;
 		MException::throw({ CHG_FUNC => '.servst' });
 	}
-	
+
 	#---------------------------
 	# USER_ST ユーザステータスチェック
-	
+
 	if ($_::U->{USER_ST} < $reqUserSt) {
+		MLog::write("$_::LOG_DIR/debug", "Error USER_ST");
 		if ($_::U->{USER_ST} == 1) {
 			# ***
 			MException::throw({ CHG_FUNC => 'm01' });
@@ -232,20 +243,22 @@ sub callPage {
 			MException::throw({ CHG_FUNC => 'welcome' });
 		}
 	}
-	
+
 	#---------------------------
 	# メンテ中
-	
+
 	if ($_::MAINTAIN_FUNC{$func}) {
+		MLog::write("$_::LOG_DIR/debug", "Error Maintenance");
 		MException::throw({ REDIRECT =>
 			Request::makeBasePath(). $_::MAINTAIN_FUNC{$func} });
 	}
-	
+
 	#---------------------------
 	# ページ別機能をコール
-	
+
 	my $moduleFile = "$moduleName.pm";
 	   $moduleFile =~ s#::#/#g;
+	MLog::write("$_::LOG_DIR/debug", "before require $moduleFile");
 	require $moduleFile;
 	&{"$moduleName\::$subName"}($func);
 }
@@ -269,17 +282,17 @@ sub redirectToRightDomain {
 		} else {
 			$url = Request::makeBasePath();
 		}
-		
+
 		my $tmp = $ENV{REQUEST_URI};
 		$tmp = "/$'" if ($tmp =~ m#/\.[^/]*/#);
 		$url .= $tmp;
-		
+
 		if ($ENV{MB_CARRIER_UA} eq 'D' &&
 			$url !~ /[\&\?]guid=ON/i) {
 			$url .= ($url =~ /\?/ ? '&' : '?'). "guid=ON";
 		}
 	}
-	
+
 	Response::redirect($url);
 }
 

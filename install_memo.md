@@ -12,22 +12,34 @@ $ docker build -t moba .
 
 ### コンテナの作成、実行
 
-`moba`という名前をつけて、カレントディレクトリをマウントしています。
+`mobalog`という名前をつけて、カレントディレクトリをマウントしています。
 
 ```bash
-$ docker run --name moba -v $(pwd):/usr/local/moba -p 8080:80 -itd moba
+$ docker run --name moba -v $(pwd):/usr/local/lib/mobalog -p 80:80 -itd moba
 ```
 
 ### コンテナで作業
 
 ```bash
-$ docker attach moba
+$ docker exec -it moba bash
 ```
 
 ### コンテナから出る
 
 ```bash
 $ exit
+```
+
+### コンテナの一時停止
+
+```bash
+$ docker pause moba
+```
+
+### コンテナの一時停止からの再開
+
+```bash
+$ docker unpause moba
 ```
 
 ### コンテナの再開
@@ -41,7 +53,6 @@ $ docker start moba
 ```bash
 $ docker ps -a
 ```
-
 
 ### コンテナの破棄
 
@@ -59,4 +70,40 @@ $ docker images
 
 ```bash
 $ docker rmi moba
+```
+
+### イメージの履歴
+
+```bash
+$ docker history moba
+```
+
+### イメージの変更を戻す
+
+```bash
+$ docker tag 1607065afa42 moba:latest
+```
+
+### apache 起動
+
+```bash
+$ docker exec -it moba /usr/sbin/httpd -D FOREGROUND
+```
+
+### apache ログ監視
+
+```bash
+$ docker exec moba tail -f /usr/local/lib/mobalog/data/log/error_log
+```
+
+### mariadb 起動
+
+```bash
+$ docker exec -it moba /usr/bin/mysqld_safe
+```
+
+### mobasif ログ監視
+
+```bash
+docker exec moba tail -f /usr/local/lib/mobalog/data/log/fcgi.err.log.$(date +%Y%m%d)
 ```

@@ -62,11 +62,11 @@ exit
 * 設定値の置換
 
 cd $MOBA_DIR/conf
-find . -type f | xargs sed -i s:###MOBA_DIR###:$MOBA_DIR:g;
-find . -type f | xargs sed -i s/###PROJ_NAME###/{DB基本名}/g;
-find . -type f | xargs sed -i s/###USER###/$USER/g;
-find . -type f | xargs sed -i s/###GROUP###/{実行GROUP}/g;
-find . -type f | xargs sed -i s/###DOMAIN###/{web サーバのドメイン}/g;
+find . -type f | xargs sed -i s:/usr/local/lib/mobalog:$MOBA_DIR:g;
+find . -type f | xargs sed -i s/mobalog/{DB基本名}/g;
+find . -type f | xargs sed -i s/apache/$USER/g;
+find . -type f | xargs sed -i s/apache/{実行GROUP}/g;
+find . -type f | xargs sed -i s/lvh.me/{web サーバのドメイン}/g;
 
 ↑PROJ_NAME : DB 関係の名前に使われます。たとえば、'xxxx' にすると、
               mysql に xxxx_w, xxxx_r ユーザが作られ、
