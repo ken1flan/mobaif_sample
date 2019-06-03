@@ -21,7 +21,8 @@ sub output {
 
 	# 絵文字を端末のキャリア向けに変換
 
-	my $html = $_::MCODE->u2any(${$rHtml}, $ENV{MB_CARRIER_UA});
+	# my $html = $_::MCODE->u2any(${$rHtml}, $ENV{MB_CARRIER_UA});
+	my $html = ${$rHtml};
 	MLog::write("$_::LOG_DIR/debug", "after MCODE->u2any");
 
 	# iモードID要求の追加
