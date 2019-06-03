@@ -24,13 +24,13 @@ RUN cpanm DBI
 RUN cpanm DBD::MariaDB
 
 # mobasif
-RUN wget -P /tmp https://github.com/ken1flan/mobaif_sample/archive/master.zip
+RUN wget -P /tmp https://github.com/ken1flan/mobasif_sample/archive/master.zip
 RUN unzip /tmp/master.zip -d /tmp
-RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs MobaConf
-RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs MTemplate
-RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs Mcode
-RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs SoftbankEncode
-RUN cd /tmp/mobaif_sample-master/src/xs && ./makexs HTMLFast
+RUN cd /tmp/mobasif_sample-master/src/xs && ./makexs MobaConf
+RUN cd /tmp/mobasif_sample-master/src/xs && ./makexs MTemplate
+RUN cd /tmp/mobasif_sample-master/src/xs && ./makexs Mcode
+RUN cd /tmp/mobasif_sample-master/src/xs && ./makexs SoftbankEncode
+RUN cd /tmp/mobasif_sample-master/src/xs && ./makexs HTMLFast
 RUN echo "Include /usr/local/lib/mobalog/conf/httpd.conf" >>  /etc/httpd/conf/httpd.conf
 RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 
