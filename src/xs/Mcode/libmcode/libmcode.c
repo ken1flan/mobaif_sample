@@ -10,7 +10,7 @@ void* mcode_openMap(char* file) {
 	void* pDat;
 	int len;
 	FILE* fd;
-	
+
 	fd = fopen(file, "rb");
 	if (fd == NULL) return(NULL);
 	fseek(fd, 0, SEEK_END);
@@ -22,7 +22,7 @@ void* mcode_openMap(char* file) {
 	}
 	pDat = mmap(0, len, PROT_READ, MAP_SHARED, fileno(fd), 0);
 	fclose(fd);
-	
+
 	if (*((int*)(pDat)) != len) {
 		munmap(pDat, len);
 		return(NULL);
@@ -46,22 +46,24 @@ void mcode_closeMap(void* pDat) {
 void mcode_any2u(uchar* pDst, uchar* pSrc, int maxlen) {
 	uchar  *pSrcE, *pDstE, c1, *pConv;
 	int    sz, mode;
-	
+
+	printf("---mcode_any2u()\n");
+
 	c1    = 0;
 	sz    = 0;
 	pSrcE = pSrc + strlen(pSrc);
 	pDstE = pDst + maxlen;
-	
+
 	mode  = 0; // 絵文字モードではない
 	while (pSrc < pSrcE) {
-		
+
 		//--------------------
 		// 文字単位を取得
-		
+
 		if (mode == 1) {
-			
+
 			// 絵文字終端チェック
-			
+
 			if (*pSrc == 0x0f) {
 				mode = 0;
 				pSrc++;
@@ -69,14 +71,14 @@ void mcode_any2u(uchar* pDst, uchar* pSrc, int maxlen) {
 			}
 		} else {
 			sz = _mcode_charsize(pSrc);
-			
+
 			if (sz == MC_CHAR_DOCOMO)   sz = 2;
 			if (sz == MC_CHAR_EZWEB)    sz = 2;
 			if (sz == MC_CHAR_VODAFONE) sz = 3;
 			if (sz == MC_CHAR_HANKANA)  sz = 1;
-			
+
 			// 不正文字と VODAFONE 絵文字の処理
-			
+
 			if (sz < 0) {
 				if (sz == -2) {
 					if (pDstE - pDst < 2) break;
@@ -93,10 +95,10 @@ void mcode_any2u(uchar* pDst, uchar* pSrc, int maxlen) {
 				continue;
 			}
 		}
-		
+
 		//--------------------
 		// 変換・書き込み
-		
+
 		if (mode == 1) {
 			if (c1) {
 				if (pDstE - pDst < 3) break;
@@ -130,31 +132,35 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 	uchar  *pSrcE, *pDstE, *pConv, *pConvSrc, c1, c2;
 	ushort *pMap;
 	int    sz, c ,i;
-	
+	printf("---mcode_u2any()\n");
+	printf("%s\n", pSrc);
+
 	pMap  = (ushort*) (pDat + MC_MAPFILE_OFS_MAP);
 	pConv = (uchar*)  (pDat + MC_MAPFILE_OFS_STR);
 	pSrcE = pSrc + strlen(pSrc);
 	pDstE = pDst + maxlen;
-	
+
 	c1 = c2 = 0;
 	if (!pDst) maxlen = 0;
-	
+
 	while (pSrc < pSrcE) {
-		
+
 		//--------------------
 		// 文字単位を取得
-		
+
 		sz = _mcode_charsize(pSrc);
-		
+		printf("sz: %d\n", sz);
+
 		switch (sz) {
 		case MC_CHAR_DOCOMO:  sz = 2; break;
 		case MC_CHAR_EZWEB:   sz = 2; break;
 		case MC_CHAR_HANKANA: sz = 1; break;
 		}
-		
+		printf("fixed sz: %d\n", sz);
+
 		//--------------------
 		// 不正文字の処理
-		
+
 		if (sz < 0) {
 			if (sz == -2) {
 				if (pDst && pDstE - pDst < 2) break;
@@ -169,9 +175,10 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 			if (pSrc >= pSrcE) break;
 			continue;
 		}
-		
+		printf("checked illegal char\n");
+
 		//--------------------
-		
+
 		if (sz > 2 && sz != MC_CHAR_VODAFONE) {
 			if (pDst && pDstE - pDst < sz) break;
 			if (pDst) {
@@ -182,11 +189,11 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 				pSrc   += sz;
 				maxlen += sz;
 			}
-			
+
 		} else {
-			
+
 			// 文字を取得
-			
+
 			if (sz == MC_CHAR_VODAFONE) {
 				            pSrc++; if (pSrc == pSrcE) break;
 				c1 = *pSrc; pSrc++; if (pSrc == pSrcE) break;
@@ -200,9 +207,11 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 				c2 = *pSrc; pSrc++;
 				c  = (c1 << 8) | c2;
 			}
-			
+
+			printf("before check exist transration target: %d\n", c);
 			if (pMap[c]) { // 変換対象がある場合
-				
+				printf("exist transration target\n");
+
 				pConvSrc = &(pConv[pMap[c]]);
 				while (*pConvSrc) {
 					if (pDst && pDstE - pDst < 1) break;
@@ -214,7 +223,8 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 					pConvSrc++;
 				}
 			} else { // 変換対象がない場合
-				
+				printf("not exist transration target\n");
+
 				if (sz == MC_CHAR_VODAFONE) {
 					if (pDst && pDstE - pDst < 3) break;
 					if (pDst) {
@@ -243,13 +253,13 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 			}
 		}
 	}
-	
+
 	if (pDst) {
 		*pDst = '\0';
 	} else {
 		maxlen++;
 	}
-	
+
 	return(maxlen);
 }
 
@@ -262,23 +272,23 @@ int mcode_u2any(uchar* pDst, uchar* pSrc, int maxlen, void* pDat) {
 void mcode_usub(uchar* pDst, uchar* pSrc, int maxlen) {
 	uchar  *pSrcE, *pDstE, c1, c2;
 	int    sz, len, i;
-	
+
 	pSrcE = pSrc + strlen(pSrc);
 	pDstE = pDst + maxlen;
-	
+
 	c1 = c2 = 0;
-	
+
 	while (pSrc < pSrcE) {
-		
+
 		// 文字単位を取得
-		
+
 		sz = _mcode_charsize(pSrc);
-		
+
 		if (sz == MC_CHAR_VODAFONE) sz = 3;
 		if (sz == MC_CHAR_DOCOMO)   sz = 2;
 		if (sz == MC_CHAR_EZWEB)    sz = 2;
 		if (sz == MC_CHAR_HANKANA)  sz = 1;
-		
+
 		if (sz < 0) { // 不正文字の処理
 			if (sz == -2) {
 				if (pDstE - pDst < 2) break;
@@ -289,9 +299,9 @@ void mcode_usub(uchar* pDst, uchar* pSrc, int maxlen) {
 			if (pSrc >= pSrcE) break;
 			continue;
 		}
-		
+
 		// ソース文字を取得
-		
+
 		if (pDstE - pDst < sz) break;
 		for (i = 0; i < sz; i++) {
 			*pDst = *pSrc; pSrc++; pDst++; if (pSrc == pSrcE) break;
@@ -307,9 +317,9 @@ void mcode_usub(uchar* pDst, uchar* pSrc, int maxlen) {
 int mcode_check_emoji(uchar* pSrc) {
 	uchar  *pSrcE;
 	int    sz;
-	
+
 	pSrcE = pSrc + strlen(pSrc);
-	
+
 	while (pSrc < pSrcE) {
 		sz = _mcode_charsize(pSrc);
 		if (sz == MC_CHAR_HANKANA) sz = 1;
@@ -335,9 +345,9 @@ int _mcode_charsize(const uchar* pChr) {
 	c  = *pChr;
 	if (!c) return(0);
 	c2 = pChr[1];
-	
+
 	// 漢字
-	
+
 	if (c >= 0x81 && c <= 0x9F ||
 	    c >= 0xE0 && c <= 0xF2) {
 		if (!c2) return(-1);
@@ -348,9 +358,9 @@ int _mcode_charsize(const uchar* pChr) {
 			return(-2);
 		}
 	}
-	
+
 	// 絵文字
-	
+
 	if (c >= 0xF8 && c <= 0xF9) {
 		if (c2 >= 0x40 && c2 <= 0x7E ||
 		    c2 >= 0x80 && c2 <= 0xFC) {
@@ -396,14 +406,14 @@ int _mcode_charsize(const uchar* pChr) {
 		if (len < 5 || len >= 10000) bad = 1;
 		return(bad ? -len : len);
 	}
-	
+
 	if (c >= 0x20 && c <= 0x7E) return(1);               // 通常ASCII
 	if (c >= 0xA1 && c <= 0xDF) return(MC_CHAR_HANKANA); // 半角カナ
-	
-	// HT(0x09) LF(0x0A) CR(0x0D) VT(0x0B) 
+
+	// HT(0x09) LF(0x0A) CR(0x0D) VT(0x0B)
 	// 以外の制御文字は除去する
 	// なお、SB は 1B 24 ** ** 0F
-	
+
 	return
 		(c == 0x09 || c == 0x0A || c == 0x0B || c == 0x0D) ? 1 : -1;
 }
