@@ -11,10 +11,14 @@ my $src = <<EOF;
 </html>
 EOF
 
+print "----\n";
 print "$src\n";
-print "----\n";
 
-my $output = $mcode->u2any(\$src, 'D');
+$src = $mcode->any2u($src);
+print "---- any2u\n";
+print "$src\n";
 
-print "$output\n";
-print "----\n";
+$mcode->u2any($src, 'D');
+
+print "---- u2any\n";
+print "$src\n";
