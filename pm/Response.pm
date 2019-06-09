@@ -19,24 +19,10 @@ sub output {
 	my ($rHtml, $cache) = @_;
 	MLog::write("$_::LOG_DIR/debug", "Response::ouput() start");
 
-	my $charset = 'Shift_JIS';
 
 	# content-type は内容を見て決定
-
-	my $head = substr($html, 0, 100);
-	if ($head =~ /<\?\s*xml/) {
-		if ($ENV{MB_CARRIER_IP} eq 'I') {
-
-			# 社内などから通常のブラウザで見る場合に、
-			# content-type を xhtml として返すと表示が崩れるため。
-
-			print "Content-type: text/html; charset=$charset\r\n";
-		} else {
-			print "Content-type: application/xhtml+xml; charset=$charset\r\n";
-		}
-	} else {
-		print "Content-type: text/html; charset=$charset\r\n";
-	}
+	my $charset = 'Shift_JIS';  # TODO: 自動判別にする。
+	print "Content-type: text/html; charset=$charset\r\n";
 
 	$html = '' if ($ENV{REQUEST_METHOD} eq 'HEAD');
 
