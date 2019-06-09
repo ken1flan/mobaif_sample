@@ -58,66 +58,10 @@ sub main {
 		$ENV{MB_REQUIRED_HOST}  = '';
 
 		#-------------------------------
-		# 処理ホスト名チェック
-
-		# my $proto = $ENV{MB_SSL} ? 'https' : 'http';
-		# if ($_::BYPASS_FUNC{$func} < 1 &&
-		# 	(
-		# 	($ENV{MB_REQUIRED_PROTO} &&
-		# 	 $ENV{MB_REQUIRED_PROTO} ne $proto)
-		# 	||
-		# 	($ENV{MB_REQUIRED_HOST} &&
-		# 	 $ENV{MB_REQUIRED_HOST} ne $ENV{SERVER_NAME})
-		# 	)
-		# ) {
-		# 	redirectToRightDomain();
-		# 	goto FUNC_END;
-		# }
-
-		#-------------------------------
 		# 接続元チェック除外
 
 		if ($_::BYPASS_FUNC{$func} >= 2) {
 			goto FUNC_START;
-		}
-
-		#-------------------------------
-		# PC リダイレクト
-
-		# if ($ENV{MB_CARRIER_UA} eq '-') {
-		# 	redirectToRightDomain();
-		# 	goto FUNC_END;
-		# }
-
-		#-------------------------------
-		# 携帯UAがキャリアGW以外のIPからアクセスしてきた場合
-
-		if ($ENV{MB_CARRIER_UA} ne $ENV{MB_CARRIER_IP} &&
-			$ENV{MB_CARRIER_UA} ne '-' &&
-			$ENV{MB_CARRIER_IP} ne 'I' && # 社内
-			!$_::DEBUG_ALLOW_PC) {
-			$func = '.noprx';
-			goto FUNC_START;
-		}
-
-		#---------------------------
-		# サポート外機種
-
-		if ($ENV{MB_SERV_LV} == -1) {
-			if (!$_::NOSUP_OK_FUNC{$func}) {
-				$func = '.nosup';
-				goto FUNC_START;
-			}
-		}
-
-		#-------------------------------
-		# 登録機種情報とアクセス機種情報が異なる場合
-
-		if ($_::U->{USER_ID} &&
-			$_::U->{REG_MODEL} ne $ENV{MB_MODEL_NAME}) {
-			Func::User::updateModel(
-				$_::U->{USER_ID}, $_::U->{REG_MODEL});
-			DA::commit();
 		}
 
 		#-------------------------------
@@ -209,18 +153,6 @@ sub callPage {
 	my ($reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName)
 		= @{$_::PAGE{$func}};
 	MLog::write("$_::LOG_DIR/debug", "Page infomation $reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName");
-
-	#---------------------------
-	# UID_ST 端末情報エラー
-
-	if ($_::U->{UID_ST} < $reqUidSt) {
-		MLog::write("$_::LOG_DIR/debug", "Error UID_ST");
-		if ($ENV{MB_CARRIER_UA} eq 'D' &&
-			$ENV{REQUEST_URI} !~ /[\?\&]guid=ON/) {
-			MException::throw({ REDIRECT2 => 1 });
-		}
-		MException::throw({ CHG_FUNC => '.nouid' });
-	}
 
 	#---------------------------
 	# SERV_ST サービスステータスチェック

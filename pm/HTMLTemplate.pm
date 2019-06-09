@@ -53,12 +53,12 @@ our %SMALL_TAG_END = (
 
 sub insert {
 	my ($name, $rhParams, $rhParams2) = @_;
-	
+
 	$rhParams  = {} unless ($rhParams);
 	$rhParams2 = {} unless ($rhParams2);
-	
+
 	# 会員フラグ
-	
+
 	if ($_::U->{USER_ID}) {
 		$rhParams2->{MEMBER} = 1;
 		$rhParams2->{USER_ID}  = $_::U->{USER_ID};
@@ -69,7 +69,7 @@ sub insert {
 			delete($rhParams2->{$key});
 		}
 	}
-	
+
 	$rhParams2->{RAND} = rand();
 	$rhParams2->{TIME} = time();
 	$rhParams2->{TEST} = 1 if ($_::TEST_MODE);
@@ -77,10 +77,10 @@ sub insert {
 		{ host => $ENV{MB_HTTP_HOST} });
 	$rhParams2->{SSLBasePath} = Request::makeSSLBasePath(
 		{ host => $ENV{MB_HTTPS_HOST} });
-	
+
 	# 端末の文字サイズ設定が「標準」でも「小」でも同じサイズで
 	# 表示できるようにするために使用
-	
+
 	if ($ENV{MB_CHARS_W} < 28) { # フォントサイズが標準以上の場合だけ
 		$rhParams2->{SMALL_TAG} =
 			$SMALL_TAG_M{$ENV{MB_MODEL_NAME}} ?
@@ -88,23 +88,24 @@ sub insert {
 			$SMALL_TAG_C{$ENV{MB_CARRIER_UA}};
 		$rhParams2->{SMALL_TAG_END} = $SMALL_TAG_END{$ENV{MB_CARRIER_UA}};
 	}
-	
+
 	# MobileEnv.pm で取得した内容
-	
+
 	$rhParams2->{CARRIER}     = $ENV{MB_CARRIER_UA};
 	$rhParams2->{MODEL_TYPE}  = $ENV{MB_MODEL_TYPE};
 	$rhParams2->{MODEL_NAME}  = $ENV{MB_MODEL_NAME};
 	$rhParams2->{BROWSER_W}   = $ENV{MB_BROWSER_W};
 	$rhParams2->{BROWSER_W2}  = $ENV{MB_BROWSER_W2};
 	$rhParams2->{CHARS_W}     = $ENV{MB_CHARS_W};
-	
+
 	# テンプレート処理
-	
-	my $type = lc($ENV{MB_CARRIER_UA});
+
+	# my $type = lc($ENV{MB_CARRIER_UA});
+  my $type = 'p';
 	my $html = MTemplate::insert(
 		"$_::HTML_BIN_DIR/_system/$name.bin.$type",
 			$rhParams, $rhParams2, $_::DEFAULT_CONFIG);
-	
+
 	return($html);
 }
 
