@@ -100,16 +100,6 @@ sub main {
 			goto FUNC_START;
 		}
 
-		#---------------------------
-		# サポート外機種
-
-		if ($ENV{MB_SERV_LV} == -1) {
-			if (!$_::NOSUP_OK_FUNC{$func}) {
-				$func = '.nosup';
-				goto FUNC_START;
-			}
-		}
-
 		#-------------------------------
 		# リダイレクト
 
