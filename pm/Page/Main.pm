@@ -90,17 +90,6 @@ sub main {
 		# }
 
 		#-------------------------------
-		# 携帯UAがキャリアGW以外のIPからアクセスしてきた場合
-
-		if ($ENV{MB_CARRIER_UA} ne $ENV{MB_CARRIER_IP} &&
-			$ENV{MB_CARRIER_UA} ne '-' &&
-			$ENV{MB_CARRIER_IP} ne 'I' && # 社内
-			!$_::DEBUG_ALLOW_PC) {
-			$func = '.noprx';
-			goto FUNC_START;
-		}
-
-		#-------------------------------
 		# リダイレクト
 
 		if ($_::BYPASS_FUNC{$func} >= 1) { # リダイレクト除外
