@@ -19,13 +19,6 @@ sub output {
 	my ($rHtml, $cache) = @_;
 	MLog::write("$_::LOG_DIR/debug", "Response::ouput() start");
 
-	# iモードID要求の追加
-
-	if ($ENV{MB_CARRIER_UA} eq 'D') {
-		Util::DoCoMoGUID::addGuidReq(\$html);
-	  MLog::write("$_::LOG_DIR/debug", "Docomo");
-	}
-
 	my $charset = 'Shift_JIS';
 
 	if ($ENV{MB_MODEL_TYPE} eq 'VG') {
