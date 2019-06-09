@@ -21,17 +21,6 @@ sub output {
 
 	my $charset = 'Shift_JIS';
 
-	if ($ENV{MB_MODEL_TYPE} eq 'VG') {
-
-		# softbank の 3G は、ページを UTF8 にしないとフォームから
-		# 絵文字が送信されないため
-
-		$charset = 'UTF-8';
-		$html = SoftbankEncode::sjis_to_utf8($html);
-	  MLog::write("$_::LOG_DIR/debug", "Softbank");
-	}
-	MLog::write("$_::LOG_DIR/debug", "after carrier support");
-
 	# content-type は内容を見て決定
 
 	my $head = substr($html, 0, 100);
