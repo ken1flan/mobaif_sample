@@ -58,23 +58,6 @@ sub main {
 		$ENV{MB_REQUIRED_HOST}  = '';
 
 		#-------------------------------
-		# 処理ホスト名チェック
-
-		# my $proto = $ENV{MB_SSL} ? 'https' : 'http';
-		# if ($_::BYPASS_FUNC{$func} < 1 &&
-		# 	(
-		# 	($ENV{MB_REQUIRED_PROTO} &&
-		# 	 $ENV{MB_REQUIRED_PROTO} ne $proto)
-		# 	||
-		# 	($ENV{MB_REQUIRED_HOST} &&
-		# 	 $ENV{MB_REQUIRED_HOST} ne $ENV{SERVER_NAME})
-		# 	)
-		# ) {
-		# 	redirectToRightDomain();
-		# 	goto FUNC_END;
-		# }
-
-		#-------------------------------
 		# 接続元チェック除外
 
 		if ($_::BYPASS_FUNC{$func} >= 2) {
