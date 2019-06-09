@@ -82,14 +82,6 @@ sub main {
 		}
 
 		#-------------------------------
-		# PC リダイレクト
-
-		# if ($ENV{MB_CARRIER_UA} eq '-') {
-		# 	redirectToRightDomain();
-		# 	goto FUNC_END;
-		# }
-
-		#-------------------------------
 		# リダイレクト
 
 		if ($_::BYPASS_FUNC{$func} >= 1) { # リダイレクト除外
