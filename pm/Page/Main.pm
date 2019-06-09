@@ -111,16 +111,6 @@ sub main {
 		}
 
 		#-------------------------------
-		# 登録機種情報とアクセス機種情報が異なる場合
-
-		if ($_::U->{USER_ID} &&
-			$_::U->{REG_MODEL} ne $ENV{MB_MODEL_NAME}) {
-			Func::User::updateModel(
-				$_::U->{USER_ID}, $_::U->{REG_MODEL});
-			DA::commit();
-		}
-
-		#-------------------------------
 		# リダイレクト
 
 		if ($_::BYPASS_FUNC{$func} >= 1) { # リダイレクト除外
