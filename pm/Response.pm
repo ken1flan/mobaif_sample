@@ -17,8 +17,8 @@ use Util::DoCoMoGUID;
 
 sub output {
 	my ($rHtml, $cache) = @_;
+	my $html = ${$rHtml};
 	MLog::write("$_::LOG_DIR/debug", "Response::ouput() start");
-
 
 	# content-type は内容を見て決定
 	my $charset = 'Shift_JIS';  # TODO: 自動判別にする。
