@@ -18,14 +18,11 @@ use Request;
 use Response;
 
 use DA;
-use Mcode;
 use HTMLTemplate;
 use MException;
 use MLog;
 
 use Page::Base;
-
-$_::MCODE = new Mcode($_::MCODE_DIR);
 
 #---------------------------------------------------------------------
 # еседеє

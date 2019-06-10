@@ -17,11 +17,8 @@ use File::Path;
 use strict;
 use MobaConf;
 use HTMLFast;
-use Mcode;
 use MTemplate::Compiler;
 use Util::XHTMLConverter;
-
-$_::MCODE = new Mcode($_::MCODE_DIR) if (!$_::MCODE);
 
 #---------------------------------------------------------------------
 # 全テンプレートをコンパイル
@@ -195,8 +192,6 @@ sub compile_one {
 	processPreMoji(\$text, $type);
 	processPreDate(\$text, $type);
 	processPreCmt (\$text, $type);
-
-	$text = $_::MCODE->any2u($text);
 
 	if ($type eq 'd') {
 		$text = Util::XHTMLConverter::convert($text, $srcName =~ /\.sub$/);
