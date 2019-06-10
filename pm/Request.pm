@@ -53,7 +53,7 @@ sub DESTROY {
 	my $self = shift;
 	if (ref($self) eq 'HASH' &&
 		ref($self->{UPLOAD_FILES}) eq 'ARRAY') {
-		
+
 		for my $file (@{$self->{UPLOAD_FILES}}) {
 			unlink($file) if (-e $file);
 		}
@@ -65,9 +65,9 @@ sub DESTROY {
 
 sub getFormData {
 	my ($self) = shift;
-	
+
 	# 通常パラメータ
-	
+
 	if ($ENV{QUERY_STRING}) {
 		_decodePairs($self, \$ENV{QUERY_STRING}, '&', '=', '%');
 	}
@@ -79,12 +79,12 @@ sub getFormData {
 			$self->processPOST1();
 		}
 	}
-	
+
 	if ($self->{'_CODE'}) {
 		if      ($self->{'_CODE'} eq $CODE_SJIS) {
-			
+
 		} elsif ($self->{'_CODE'} eq $CODE_UTF8) {
-			
+
 			if ($ENV{MB_MODEL_TYPE} eq 'VG') {
 				for my $key (keys %{$self}) {
 					$self->{$key} =
@@ -96,13 +96,13 @@ sub getFormData {
 					Encode::from_to($self->{$key}, 'utf8', 'cp932');
 				}
 			}
-			
+
 		} elsif ($self->{'_CODE'} eq $CODE_EUC) {
 			# モバイルではここにもこない前提
 			for my $key (keys %{$self}) {
 				Encode::from_to($self->{$key}, 'euc-jp', 'cp932');
 			}
-		
+
 		} else {
 			my $tmp = '';
 			while ($self->{'_CODE'} =~ /./g) {
@@ -110,28 +110,17 @@ sub getFormData {
 			}
 		}
 	}
-	
-	# 絵文字を内部形式（統合形式）に変換
-	
-	# * といっても、ezweb, imode はコードが被らないので無変換。
-	#   softbank は、１文字あたりのバイト数が
-	#   1.? 〜5バイトになって扱いにくいため、
-	#   1B 24 ** ** 0F を 0B ** ** の１文字３バイトに変換する。
-	
-	for my $key (keys %{$self}) {
-		$self->{$key} = $_::MCODE->any2u($self->{$key});
-	}
 }
 
 #------------------------------------------------------------
 
 sub processPOST1 {
 	my ($self) = @_;
-	
+
 	if ($ENV{CONTENT_LENGTH} > $POST_MAX_LENGTH) {
 		die "content-length exceed ($ENV{CONTENT_LENGTH})\n";
 	}
-	
+
 	my ($data, $left) = ('', int($ENV{CONTENT_LENGTH}));
 	eval {
 		local $SIG{ALRM} = sub { die "TIMEOUT\n" };
@@ -165,14 +154,14 @@ sub processPOST1 {
 
 sub processPOST2 {
 	my ($self, $boundary) = @_;
-	
+
 	eval {
 		local $SIG{ALRM} = sub { die "TIMEOUT\n" };
 		alarm($MP_READ_TIMEOUT);
 		$self->_processPOST2($boundary);
 	};
 	alarm(0);
-	
+
 	if ($@) {
 		if ($@ =~ /^TIMEOUT/) {
 			MException::error('POST Timeout',
@@ -185,29 +174,29 @@ sub processPOST2 {
 
 sub _processPOST2 {
 	my ($self, $boundary) = @_;
-	
+
 	if ($ENV{CONTENT_LENGTH} > $MP_MAX_LENGTH) {
 		die "content-length exceed ($ENV{CONTENT_LENGTH})\n";
 	}
-	
+
 	$self->{UPLOAD_FILES} = [];
-	
+
 	my $mode = 0;
 	my $left = int($ENV{CONTENT_LENGTH});
-	
+
 	my $upload_no = 0;
 	my ($upload_name, $upload_type, $upload_size, $upload_file);
 	my ($name, $buf, $buf_next);
 	my $fh = new FileHandle;
-	
+
 	while ($left || $buf ne '') {
-		
+
 		#---------------
 		# データ先読み
-		
+
 		if ($left > 0 &&
 		    length($buf) < $MP_SAVE_BUF_SIZE - $MP_READ_BUF_SIZE) {
-			
+
 			my $len = ($left < $MP_READ_BUF_SIZE)
 				? $left : $MP_READ_BUF_SIZE;
 			alarm($MP_READ_TIMEOUT);
@@ -216,12 +205,12 @@ sub _processPOST2 {
 			}
 			$left -= length($buf_next);
 		}
-		
+
 		#---------------
 		# 境界チェック
-		
+
 		# これだと、\n 改行でデータ末尾が \r の場合 \r がとれてしまうが・・
-		
+
 		my $changed = 0;
 		my $tmp = $buf. $buf_next;
 		if ($tmp =~ /\r?\n?-*$boundary-*\r?\n/m) {
@@ -229,14 +218,14 @@ sub _processPOST2 {
 			$buf_next = $';
 			$changed  = 1;
 		}
-		
+
 		#---------------
 		# 読み込みデータ処理
-		
+
 		if ($mode == 1) { # ヘッダ待ち
 			if ($buf =~ /\r?\n\r?\n/) {
 				$buf  = $';
-				
+
 				my %header;
 				my $headers = $`;
 				for my $header (split(/\r?\n/, $headers)) {
@@ -244,9 +233,9 @@ sub _processPOST2 {
 						$header{lc($1)} = $';
 					}
 				}
-				
+
 				my $filename;
-				
+
 				if (my $disposition = $header{'content-disposition'}) {
 					$mode = 2;
 					for my $part (split(/;\s+/, $disposition)) {
@@ -261,7 +250,7 @@ sub _processPOST2 {
 					die "$headers\n";
 					die "no content-disposition\n";
 				}
-				
+
 				if ($mode == 3) {
 					$upload_no++;
 					if ($UPLOAD_DIR eq '') {
@@ -274,7 +263,7 @@ sub _processPOST2 {
 				}
 			}
 		}
-		
+
 		if ($mode == 2) { # データ待ち（ファイル以外）
 			if ($buf ne '') {
 				$self->{$name} .= $buf;
@@ -292,10 +281,10 @@ sub _processPOST2 {
 				$buf = '';
 			}
 		}
-		
+
 		#---------------------
 		# 境界処理後だった場合
-		
+
 		if ($changed) {
 			if ($mode == 3 && $upload_size > 0) {
 				close($fh);
@@ -306,7 +295,7 @@ sub _processPOST2 {
 			}
 			$mode = 1;
 		}
-		
+
 		if ($buf_next ne '') {
 			$buf .= $buf_next;
 			$buf_next = '';
@@ -325,7 +314,7 @@ sub _decodePairs {
 	my ($rhForm, $rData, $d1, $d2, $d3) = @_;
 	foreach (split($d1, ${$rData})) {
 		my ($key, $val) = split($d2, $_, -2);
-		
+
 		$key = HTMLFast::decode($key, $d3);
 		$val = HTMLFast::decode($val, $d3);
 		$val =~ s/\r?\n/\n/g;
@@ -340,7 +329,7 @@ sub _decodePairs {
 
 sub makeBasePath {
 	my $params = shift;
-	
+
 	$params = {} unless (ref($params) eq 'HASH');
 	my $host = $params->{host};
 	$host = $ENV{MB_REQUIRED_HOST} if ($host eq '');
@@ -357,9 +346,9 @@ sub makeBasePath {
 
 sub makeSSLBasePath {
 	my $params = shift;
-	
+
 	return(makeBasePath($params)) if ($_::DEBUG_TEST_SSL);
-	
+
 	$params = {} unless (ref($params) eq 'HASH');
 	my $host = $params->{host};
 	$host = $ENV{MB_REQUIRED_HOST} if ($host eq '');
