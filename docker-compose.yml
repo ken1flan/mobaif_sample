@@ -1,0 +1,13 @@
+version: '2'
+services:
+  mobasif:
+    image: ken1flan/mobasif_sample
+    ports:
+      - "80:80"
+    volumes:
+      - .:/usr/local/lib/mobalog
+    depends_on:
+      - mariadb
+    privileged: true
+  mariadb:
+    image: circleci/mariadb:10.3
