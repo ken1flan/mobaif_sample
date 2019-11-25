@@ -28,9 +28,7 @@ RUN yum install -y mariadb mariadb-devel
 RUN yum install -y perl  # TODO: latest
 RUN yum install -y perl-devel
 RUN yum install -y perl-App-cpanminus
-RUN cpanm CGI::Fast
-RUN cpanm DBI
-RUN cpanm DBD::MariaDB
+RUN cpanm Carton
 
 # mobasif
 RUN wget -P /tmp https://github.com/ken1flan/mobasif_sample/archive/master.zip
