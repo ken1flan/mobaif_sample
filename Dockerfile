@@ -34,7 +34,8 @@ RUN cpanm Carton
 RUN echo "Include /usr/local/lib/mobalog/conf/httpd.conf" >>  /etc/httpd/conf/httpd.conf
 RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 
-# Run
-# CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
-# CMD ["/usr/bin/mysqld_safe"]
+# Chrome
+COPY yum.repos.d/google-chrome.repo /etc/yum.repos.d
+RUN yum install -y google-chrome-stable
+
 CMD ["/usr/sbin/init"]
