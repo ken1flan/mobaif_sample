@@ -1,3 +1,3 @@
-require "CGI::Fast"
-require "DBI"
-require "DBD::MariaDB"
+requires "CGI::Fast";
+requires "DBI";
+requires "DBD::MariaDB";
