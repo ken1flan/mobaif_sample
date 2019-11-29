@@ -36,7 +36,7 @@ RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 
 # Test
 COPY yum.repos.d/google-chrome.repo /etc/yum.repos.d
-RUN yum install -y google-chrome-stable
+RUN yum install -y libpng libpng-devel google-chrome-stable
 RUN yum install -y nmap-ncat
 
 CMD ["/usr/sbin/init"]
