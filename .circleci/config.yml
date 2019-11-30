@@ -41,6 +41,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: start httpd
+          command: /usr/sbin/httpd
+      - run:
           name: waiting for mariadb to be ready
           command: |
             for i in `seq 10`; do
