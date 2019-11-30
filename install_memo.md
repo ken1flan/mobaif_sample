@@ -8,7 +8,7 @@ DockerのCentOS7のコンテナ上にMobaSiF環境を作る
 
 ```console
 $ docker build -t ken1flan/mobasif_sample .
-$ docker push ken1flan/mobasif_dample:latest
+$ docker push ken1flan/mobasif_sample:latest
 ```
 
 ### コンテナの作成、実行
