@@ -17,8 +17,14 @@ jobs:
       - restore_cache:
           key: cpanfile-cache-{{ .Environment.CI_CACHE_KEY }}-{{ checksum "cpanfile.snapshot" }}
       - run:
-          name: setup
-          command: bin/setup.sh
+          name: carton install
+          command: carton install
+      - run:
+          name: xs install
+          command: cd src/xs && ./makexs MobaConf && ./makexs MTemplate && ./makexs SoftbankEncode && ./makexs HTMLFast && cd -
+      - run:
+          name: compile template
+          command: MOBA_DIR=`pwd` carton exec script/tool/compile_template
       - save_cache:
           key: cpanfile-cache-{{ .Environment.CI_CACHE_KEY }}-{{ checksum "cpanfile.snapshot" }}
           paths:
