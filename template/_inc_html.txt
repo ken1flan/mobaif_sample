@@ -35,6 +35,15 @@ $INCDEF:common_scripts$
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 $/INCDEF$
 
+#----------------------------------------
+
+$INCDEF:navbar$
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="/i/logo.png" width="30" height="30" alt="mobasif sample">
+  </a>
+</nav>
+$/INCDEF$
 
 #----------------------------------------
 # ‚»‚Ì‘¼
