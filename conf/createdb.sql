@@ -32,7 +32,7 @@ create table user_data (
   subscr_id     varchar(40)                  , # サブスクライバID
   serial_id     varchar(30)                    # SIMカード / 端末ID
 
-) type=InnoDB;
+) engine=InnoDB;
 
 alter table user_data
  add primary key     (user_id),
