@@ -1,10 +1,21 @@
+----------------------------------------------------------------------
+-- user
+
+drop user if exists "mobalog_w"@"%";
+drop user if exists "mobalog_w"@"localhost";
+drop user if exists "mobalog_r"@"%";
+drop user if exists "mobalog_r"@"localhost";
+create user "mobalog_w"@"%" identified by "password";
+create user "mobalog_w"@"localhost" identified by "password";
+create user "mobalog_r"@"%" identified by "password";
+create user "mobalog_r"@"localhost" identified by "password";
 grant all privileges on *.* to mobalog_w@"%";
 grant all privileges on *.* to mobalog_w@"localhost";
 grant select         on *.* to mobalog_r@"%";
 grant select         on *.* to mobalog_r@"localhost";
 
-#---------------------------------------------------------------------
-# user db
+----------------------------------------------------------------------
+-- user db
 
 drop   database if exists mobalog_user;
 create database           mobalog_user;
@@ -28,8 +39,8 @@ alter table user_data
  add unique index i1 (subscr_id),
  add unique index i2 (serial_id);
 
-#---------------------------------------------------------------------
-# sequence db
+----------------------------------------------------------------------
+-- sequence db
 
 drop   database if exists mobalog_seq;
 create database           mobalog_seq;
