@@ -50,6 +50,9 @@ jobs:
             done
             echo Failed waiging for mariadb to be ready && exit 1
       - run:
+          name: create database
+          command: mysql -h 127.0.0.1 -u root < conf/createdb.sql
+      - run:
           name: test
           command: |
             for f in `find test -type f -name *_test.pl`; do
