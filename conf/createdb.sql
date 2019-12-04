@@ -11,17 +11,17 @@ create database           mobalog_user;
 use                       mobalog_user;
 
 create table user_data (
-  user_id       int         unsigned not null, # ï¿½æ¡¼ï¿½ï¿½ID
-  reg_date      int         unsigned not null, # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  user_st       tinyint              not null, # ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½ï¿½ï¿½ï¿½ï¿½
-  serv_st       tinyint              not null, # ï¿½ï¿½ï¿½ï¿½ï¿½Ó¥ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½ï¿½ï¿½ï¿½ï¿½
+  user_id       int         unsigned not null, # ¥æ¡¼¥¶ID
+  reg_date      int         unsigned not null, # Æþ²ñÆü»þ
+  user_st       tinyint              not null, # ¥æ¡¼¥¶¥¹¥Æ¡¼¥¿¥¹
+  serv_st       tinyint              not null, # ¥µ¡¼¥Ó¥¹¥¹¥Æ¡¼¥¿¥¹
 
-  carrier       char(1)              not null, # ï¿½ï¿½ï¿½ï¿½ê¥¢ ( D | A | V )
-  model_name    varchar(20)          not null, # ï¿½ï¿½ï¿½ß¤Îµï¿½ï¿½ï¿½Ì¾
-  subscr_id     varchar(40)                  , # ï¿½ï¿½ï¿½Ö¥ï¿½ï¿½ï¿½ï¿½é¥¤ï¿½ï¿½ID
-  serial_id     varchar(30)                    # SIMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ / Ã¼ï¿½ï¿½ID
+  carrier       char(1)              not null, # ¥­¥ã¥ê¥¢ ( D | A | V )
+  model_name    varchar(20)          not null, # ¸½ºß¤Îµ¡¼ïÌ¾
+  subscr_id     varchar(40)                  , # ¥µ¥Ö¥¹¥¯¥é¥¤¥ÐID
+  serial_id     varchar(30)                    # SIM¥«¡¼¥É / Ã¼ËöID
 
-) engine=InnoDB;
+) type=InnoDB;
 
 alter table user_data
  add primary key     (user_id),
