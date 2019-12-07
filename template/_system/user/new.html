@@ -1,0 +1,36 @@
+<html>
+<head>
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
+</head>
+<body>
+  <div class="container">
+    $INC:navbar$
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>会員登録フォーム</h1>
+        <p>会員登録フォームです。</p>
+        <form method="post" action="$CON:root_url$/user">
+          <div class="form-group">
+            <label for="nickname">ニックネーム</label>
+            <input type="text" class="form-control" name="nickname" id="nickname" placeholder="モバシフ太郎">
+          </div>
+          <div class="form-group">
+            <label for="email">Eメール</label>
+            <input type="text" class="form-control" name="email" id="email" aria-describedby="label-email" placeholder="foo@example.com">
+          </div>
+          <div class="form-group">
+            <label for="introduction">自己紹介</label>
+            <textarea class="form-control" name="introduction" id="introduction" aria-describedby="label-introduction"></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">登録</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
+</body>
+</html>
