@@ -31,8 +31,12 @@ create table user_data (
   model_name    varchar(20)          not null, # 現在の機種名
   subscr_id     varchar(40)                  , # サブスクライバID
   serial_id     varchar(30)                  , # SIMカード / 端末ID
-  primary key(user_id)
 
+  email         varchar(256)         not null, # メールアドレス
+  nickname      varchar(20)          not null, # ニックネーム
+  introduction  varchar(255)                 , # 自己紹介
+
+  primary key(user_id)
 ) engine=InnoDB;
 
 alter table user_data
