@@ -1,3 +1,4 @@
 title     : MobaSiF
 serv_name : MobaSiF
 mail_dom  : localhost
+root_url  : http://127.0.0.1
