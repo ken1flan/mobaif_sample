@@ -34,7 +34,7 @@ create table user_data (
 
   email         varchar(256)         not null, # メールアドレス
   nickname      varchar(20)          not null, # ニックネーム
-  introduction  varchar(255)                 , # 自己紹介
+  introduction  varchar(256)                 , # 自己紹介
 
   primary key(user_id)
 ) engine=InnoDB;
