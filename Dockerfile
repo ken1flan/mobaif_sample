@@ -34,7 +34,7 @@ RUN cpanm Carton
 RUN echo "Include /usr/local/lib/mobalog/conf/httpd.conf" >>  /etc/httpd/conf/httpd.conf
 RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 COPY src/xs /tmp/xs
-RUN cd /tmp/xs && ./makexs MobaConf && ./makexs MTemplate && ./makexs SoftbankEncode && ./makexs HTMLFast
+RUN cd /tmp/xs && ./makexs MobaConf && ./makexs MTemplate && ./makexs SoftbankEncode && ./makexs HTMLFast && ./makexs Kcode
 
 # Test
 COPY yum.repos.d/google-chrome.repo /etc/yum.repos.d
