@@ -5,6 +5,7 @@ executors:
     docker:
       - image: ken1flan/mobasif_sample
       - image: mariadb:10.3
+        name: mariadb
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
@@ -44,14 +45,14 @@ jobs:
           name: waiting for mariadb to be ready
           command: |
             for i in `seq 10`; do
-              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              nc -z mariadb 3306 && echo Success && exit 0
               echo -n .
               sleep 1
             done
             echo Failed waiging for mariadb to be ready && exit 1
       - run:
           name: create database
-          command: mysql -h 127.0.0.1 -u root < conf/createdb.sql
+          command: mysql -h mariadb -u root < conf/createdb.sql
       - run:
           name: test
           command: |
