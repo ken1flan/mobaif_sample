@@ -161,4 +161,18 @@ sub _validateIntroduction {
 	return $errors;
 }
 
+sub create {
+	my ($params) = @_;
+
+	my $errors = validate($params);
+	my @keys = keys %$errors;
+	return 0 if grep { /^Err/ } @keys;
+
+	my $dbh = DA::getHandle($_::DB_USER_W);
+	$dbh->do("INSERT INTO user_data(email, nickname, introduction, reg_date, user_st, serv_st, carrier, model_name)
+	         VALUE(?, ?, ?, UNIX_TIMESTAMP(), 0, 0, 'D', 'Dummy')",
+	         undef, $params->{email}, $params->{nickname}, $params->{introduction});
+  return 1;
+}
+
 1;
