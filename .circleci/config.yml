@@ -56,9 +56,7 @@ jobs:
       - run:
           name: test
           command: |
-            for f in `find test -type f -name *.t`; do
-              carton exec perl $f
-            done
+            carton exec prove -r test
 
 workflows:
   version: 2
