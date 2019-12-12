@@ -82,6 +82,14 @@ SQL
 	}
 }
 
+sub find {
+	my ($user_id) = @_;
+
+	my $dbh = DA::getHandle($_::DB_USER_R);
+	my $row = $dbh->selectrow_hashref("SELECT * FROM user_data WHERE user_id = ?", undef, ($user_id));
+	return $row;
+}
+
 sub validate {
 	my ($params) = @_;
 	my $errors = {};
