@@ -14,6 +14,33 @@ describe 'Func::User' => sub {
     $dbh->do('TRUNCATE TABLE user_data;');
   };
 
+  describe 'find' => sub {
+    my $user_id = 0;
+
+    context '存在しないユーザのIDを指定したとき' => sub {
+      it 'undefであること' => sub {
+        my $user = Func::User::find(1);
+        ok(!defined($user));
+      }
+    };
+
+    context '存在するユーザのIDを指定したとき' => sub {
+      it '取得できること' => sub {
+        $dbh->do("
+          INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname)
+          VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar');
+        ");
+        $dbh->do("COMMIT");
+        my $row = $dbh->selectrow_arrayref("SELECT user_id FROM user_data LIMIT 1");
+        $user_id = $row->[0];
+
+        my $user = Func::User::find($user_id);
+        ok($user->{user_id} == $user_id);
+        ok($user->{nickname} eq 'foobar');
+      };
+    };
+  };
+
   describe 'validate' => sub {
     describe 'email' => sub {
       context 'undefのとき' => sub {
