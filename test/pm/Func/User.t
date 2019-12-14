@@ -27,8 +27,8 @@ describe 'Func::User' => sub {
     context '存在するユーザのIDを指定したとき' => sub {
       it '取得できること' => sub {
         $dbh->do("
-          INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname)
-          VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar');
+          INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname, hashed_password)
+          VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar', 'abcdef');
         ");
         $dbh->do("COMMIT");
         my $row = $dbh->selectrow_arrayref("SELECT user_id FROM user_data LIMIT 1");
@@ -82,8 +82,8 @@ describe 'Func::User' => sub {
       context 'emailがfoobar@example.comであるuser_dataが存在するとき' => sub {
         before each => sub {
           $dbh->do("
-            INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname)
-            VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar');
+            INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname, hashed_password)
+            VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar', 'abcdef');
           ");
           $dbh->do("COMMIT");
         };
@@ -149,8 +149,8 @@ describe 'Func::User' => sub {
 
         before each => sub {
           $dbh->do("
-            INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname)
-            VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar');
+            INSERT INTO user_data(reg_date, user_st, serv_st, carrier, model_name, email, nickname, hashed_password)
+            VALUES(UNIX_TIMESTAMP(), 0, 0, 'D', 'SOMETHING', 'foobar\@example.com', 'foobar', 'abcdef');
           ");
           $dbh->do("COMMIT");
         };
@@ -171,6 +171,44 @@ describe 'Func::User' => sub {
             my $err = Func::User::validate($params);
             ok(!defined($err->{ErrNicknameUnique}));
           };
+        };
+      };
+    };
+
+    describe 'password' => sub {
+      context 'undefのとき' => sub {
+        my $params = {};
+
+        it 'ErrPasswordPresenceが設定されていること' => sub {
+          my $err = Func::User::validate($params);
+          ok($err->{ErrPasswordPresence} == 1);
+        };
+      };
+
+      context '空文字列のとき' => sub {
+        my $params = { password => '' };
+
+        it 'ErrPasswordPresenceが設定されていること' => sub {
+          my $err = Func::User::validate($params);
+          ok($err->{ErrPasswordPresence} == 1);
+        };
+      };
+
+      context '7文字のとき' => sub {
+        my $params = { password => '1234567' };
+
+        it 'ErrPasswordLengthが設定されていること' => sub {
+          my $err = Func::User::validate($params);
+          ok($err->{ErrPasswordLength} == 7);
+        };
+      };
+
+      context '257文字のとき' => sub {
+        my $params = { password => 'a' x 257 };
+
+        it 'ErrPasswordLengthが設定されていること' => sub {
+          my $err = Func::User::validate($params);
+          ok($err->{ErrPasswordLength} == 257);
         };
       };
     };
@@ -198,7 +236,7 @@ describe 'Func::User' => sub {
 
   describe 'create' => sub {
     context 'validateでエラーがないとき' => sub {
-      my $params = { email => 'foobar@example.com', nickname => 'foobar' };
+      my $params = { email => 'foobar@example.com', nickname => 'foobar', password => 'password' };
 
       it '登録されること' => sub {
         my $ret = Func::User::create($params);
