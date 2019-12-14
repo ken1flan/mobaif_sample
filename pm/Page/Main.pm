@@ -152,6 +152,17 @@ sub callPage {
 	MLog::write("$_::LOG_DIR/debug", "Page infomation $reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName");
 
 	#---------------------------
+	# UID_ST 端末情報エラー
+
+	if ($_::U->{UID_ST} < $reqUidSt) {
+		if ($ENV{MB_CARRIER_UA} eq 'D' &&
+			$ENV{REQUEST_URI} !~ /[\?\&]guid=ON/) {
+			MException::throw({ REDIRECT2 => 1 });
+		}
+		MException::throw({ CHG_FUNC => '.nouid' });
+	}
+
+	#---------------------------
 	# SERV_ST サービスステータスチェック
 
 	if ($_::U->{SERV_ST} & $reqServSt) {
