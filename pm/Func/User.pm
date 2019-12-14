@@ -1,9 +1,11 @@
 package Func::User;
 
 use strict;
+
 use MobaConf;
 use Kcode;
 use Common;
+use Text::Password::SHA;
 
 our $NICKNAME_MIN_LENGTH = 5;
 our $NICKNAME_MAX_LENGTH = 20;
@@ -105,6 +107,9 @@ sub validate {
 	my $introductionErrors = _validateIntroduction($params->{introduction});
 	Common::mergeHash($errors, $introductionErrors);
 
+	my @keys = keys %$errors;
+	$errors->{Err} = 1 if grep { /^Err/ } @keys;
+
 	return $errors;
 }
 
@@ -194,13 +199,14 @@ sub create {
 	my ($params) = @_;
 
 	my $errors = validate($params);
-	my @keys = keys %$errors;
-	return 0 if grep { /^Err/ } @keys;
+	return 0 if $errors->{Err} == 1;
 
+	my $pwd = Text::Password::SHA->new();
+	my $hashed_password = $pwd->encrypt($params->{password});
 	my $dbh = DA::getHandle($_::DB_USER_W);
 	$dbh->do("INSERT INTO user_data(email, nickname, hashed_password, introduction, reg_date, user_st, serv_st, carrier, model_name)
 	         VALUE(?, ?, ?, ?, UNIX_TIMESTAMP(), 0, 0, 'D', 'Dummy')",
-	         undef, $params->{email}, $params->{nickname}, $params->{password}, $params->{introduction});
+	         undef, $params->{email}, $params->{nickname}, $hashed_password, $params->{introduction});
   return 1;
 }
 
