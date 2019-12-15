@@ -1,13 +1,17 @@
 package Func::User;
 
 use strict;
+
 use MobaConf;
 use Kcode;
 use Common;
+use Text::Password::SHA;
 
 our $NICKNAME_MIN_LENGTH = 5;
 our $NICKNAME_MAX_LENGTH = 20;
 our $EMAIL_MAX_LENGTH = 256;
+our $PASSWORD_MIN_LENGTH = 8;
+our $PASSWORD_MAX_LENGTH = 256;
 our $INTRODUCTION_MAX_LENGTH = 256;
 
 #-----------------------------------------------------------
@@ -98,8 +102,13 @@ sub validate {
 	Common::mergeHash($errors, $emailErrors);
 	my $nicknameErrors = _validateNickname($params->{nickname});
 	Common::mergeHash($errors, $nicknameErrors);
+	my $passwordErrors = _validatePassword($params->{password});
+	Common::mergeHash($errors, $passwordErrors);
 	my $introductionErrors = _validateIntroduction($params->{introduction});
 	Common::mergeHash($errors, $introductionErrors);
+
+	my @keys = keys %$errors;
+	$errors->{Err} = 1 if grep { /^Err/ } @keys;
 
 	return $errors;
 }
@@ -152,6 +161,23 @@ sub _validateNickname {
 	return $errors;
 }
 
+sub _validatePassword {
+	my ($password) = @_;
+	my $errors = {};
+
+	if (!defined($password) || $password eq '') {
+		$errors->{ErrPasswordPresence} = 1;
+		return $errors;
+	}
+	my $len = length($password);
+	if ($len < $PASSWORD_MIN_LENGTH || $len > $PASSWORD_MAX_LENGTH) {
+		$errors->{ErrPasswordLength} = $len;
+		return $errors;
+	}
+
+	return $errors;
+}
+
 sub _validateIntroduction {
 	my ($introduction) = @_;
 	my $errors = {};
@@ -173,13 +199,14 @@ sub create {
 	my ($params) = @_;
 
 	my $errors = validate($params);
-	my @keys = keys %$errors;
-	return 0 if grep { /^Err/ } @keys;
+	return 0 if $errors->{Err} == 1;
 
+	my $pwd = Text::Password::SHA->new();
+	my $hashed_password = $pwd->encrypt($params->{password});
 	my $dbh = DA::getHandle($_::DB_USER_W);
-	$dbh->do("INSERT INTO user_data(email, nickname, introduction, reg_date, user_st, serv_st, carrier, model_name)
-	         VALUE(?, ?, ?, UNIX_TIMESTAMP(), 0, 0, 'D', 'Dummy')",
-	         undef, $params->{email}, $params->{nickname}, $params->{introduction});
+	$dbh->do("INSERT INTO user_data(email, nickname, hashed_password, introduction, reg_date, user_st, serv_st, carrier, model_name)
+	         VALUE(?, ?, ?, ?, UNIX_TIMESTAMP(), 0, 0, 'D', 'Dummy')",
+	         undef, $params->{email}, $params->{nickname}, $hashed_password, $params->{introduction});
   return 1;
 }
 
