@@ -1,3 +1,4 @@
+requires "CGI";
 requires "CGI::Fast";
 requires "CGI::Session";
 requires "DBD::MariaDB";
