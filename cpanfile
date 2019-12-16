@@ -1,6 +1,7 @@
 requires "CGI::Fast";
-requires "DBI";
+requires "CGI::Session";
 requires "DBD::MariaDB";
+requires "DBI";
 requires "Text::Password::SHA";
 
 requires "Test::More";
