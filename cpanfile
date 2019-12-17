@@ -7,4 +7,5 @@ requires "Text::Password::SHA";
 
 requires "Test::More";
 requires "Test::Spec";
+requires "Test::Trap";
 requires "WWW::Mechanize::Chrome";
