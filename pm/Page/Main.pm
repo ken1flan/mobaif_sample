@@ -17,7 +17,10 @@ use UserData;
 use Request;
 use Response;
 
+use CGI;
+use CGI::Cookie;
 use DA;
+use Data::Dumper;
 use HTMLTemplate;
 use MException;
 use MLog;
@@ -47,6 +50,11 @@ sub main {
 		$func = $_::DEFAULT_PAGE if ($func =~ /^\./);
 		$func = $_::DEFAULT_PAGE if ($func eq '');
 		$func = '.404'           if (!exists($_::PAGE{$func}));
+
+		#-------------------------------
+		# Cookie設定
+		my %cookies = fetch CGI::Cookie;
+		$_::C = \%cookies;
 
 		#-------------------------------
 		# 処理ホスト名取得（Request.pm の make(SSL)BasePath で使われる）
