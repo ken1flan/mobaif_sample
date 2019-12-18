@@ -19,6 +19,7 @@ use Response;
 
 use CGI;
 use CGI::Cookie;
+use CGI::Session;
 use DA;
 use Data::Dumper;
 use HTMLTemplate;
@@ -55,6 +56,15 @@ sub main {
 		# Cookie設定
 		my %cookies = fetch CGI::Cookie;
 		$_::C = \%cookies;
+
+		#-------------------------------
+		# セッション設定
+		CGI::Session->name('session_id');
+		my $session_id = $_::C->{session_id} ? $_::C->{session_id}->value : undef;
+		$_::S = new CGI::Session("driver:File", $session_id, {Directory=>'/tmp'});
+		$session_id = $_::S->id() unless (defined($session_id));
+		$_::C->{session_id} = new CGI::Cookie(-name => 'session_id', -value => $session_id, -expires => '+1y');
+		$_::S->expires('+1y');
 
 		#-------------------------------
 		# 処理ホスト名取得（Request.pm の make(SSL)BasePath で使われる）
