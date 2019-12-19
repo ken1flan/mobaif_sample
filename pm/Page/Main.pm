@@ -17,7 +17,11 @@ use UserData;
 use Request;
 use Response;
 
+use CGI;
+use CGI::Cookie;
+use CGI::Session;
 use DA;
+use Data::Dumper;
 use HTMLTemplate;
 use MException;
 use MLog;
@@ -47,6 +51,15 @@ sub main {
 		$func = $_::DEFAULT_PAGE if ($func =~ /^\./);
 		$func = $_::DEFAULT_PAGE if ($func eq '');
 		$func = '.404'           if (!exists($_::PAGE{$func}));
+
+		#-------------------------------
+		# Cookie設定
+		my %cookies = fetch CGI::Cookie;
+		$_::C = \%cookies;
+
+		#-------------------------------
+		# セッション設定
+		_restore_or_create_session();
 
 		#-------------------------------
 		# 処理ホスト名取得（Request.pm の make(SSL)BasePath で使われる）
@@ -234,6 +247,15 @@ sub redirectToRightDomain {
 	}
 
 	Response::redirect($url);
+}
+
+sub _restore_or_create_session {
+	CGI::Session->name('session_id');
+	my $session_id = $_::C->{session_id} ? $_::C->{session_id}->value : undef;
+	$_::S = new CGI::Session("driver:File", $session_id, {Directory=> $_::SESSION_DIR});
+	$session_id = $_::S->id() unless (defined($session_id));
+	$_::C->{session_id} = new CGI::Cookie(-name => 'session_id', -value => $session_id, -expires => '+1y');
+	$_::S->expires('+1y');
 }
 
 1;

@@ -46,6 +46,35 @@ DISTRIBUTIONS
       FCGI 0.67
       if 0
       perl 5.008001
+  CGI-Session-4.48
+    pathname: M/MA/MARKSTOS/CGI-Session-4.48.tar.gz
+    provides:
+      CGI::Session 4.48
+      CGI::Session::Driver 4.43
+      CGI::Session::Driver::DBI 4.43
+      CGI::Session::Driver::db_file 4.43
+      CGI::Session::Driver::file 4.43
+      CGI::Session::Driver::mysql 4.43
+      CGI::Session::Driver::postgresql 4.43
+      CGI::Session::Driver::sqlite 4.43
+      CGI::Session::ErrorHandler 4.43
+      CGI::Session::ID::incr 4.43
+      CGI::Session::ID::md5 4.43
+      CGI::Session::ID::static 4.44
+      CGI::Session::Serialize::default 4.43
+      CGI::Session::Serialize::freezethaw 4.43
+      CGI::Session::Serialize::storable 4.43
+      CGI::Session::Test::Default 4.47
+      CGI::Session::Test::SimpleObjectClass 0
+      CGI::Session::Tutorial 4.43
+      OverloadedClass 0
+    requirements:
+      CGI 3.26
+      Data::Dumper 0
+      Digest::MD5 0
+      Module::Build 0.38
+      Scalar::Util 0
+      Test::More 0
   CPAN-Meta-2.150010
     pathname: D/DA/DAGOLDEN/CPAN-Meta-2.150010.tar.gz
     provides:
