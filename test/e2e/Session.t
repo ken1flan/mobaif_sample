@@ -16,11 +16,13 @@ describe 'Regist user' => sub {
     $mech = WWW::Mechanize::Chrome->new(headless=> 1);
   };
 
-  it 'is expected to visit /session/new' => sub {
+  it 'ログインができること' => sub {
     $mech->get('http://127.0.0.1/session/new');
     my $content = $mech->content;
-    ok($mech->content =~ 'New');
-  };
+    ok($mech->content =~ 'ログイン');
 
+    $mech->click('login');
+    ok($mech->content =~ 'ログインしました。');
+  };
 };
 runtests unless caller;
