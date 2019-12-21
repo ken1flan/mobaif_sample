@@ -3,8 +3,10 @@ package Func::User;
 use strict;
 
 use MobaConf;
-use Kcode;
+
 use Common;
+use DA;
+use Kcode;
 use Text::Password::SHA;
 
 our $NICKNAME_MIN_LENGTH = 5;
@@ -91,6 +93,15 @@ sub find {
 
 	my $dbh = DA::getHandle($_::DB_USER_R);
 	my $row = $dbh->selectrow_hashref("SELECT * FROM user_data WHERE user_id = ?", undef, ($user_id));
+	return $row;
+}
+
+sub find_by_email {
+	my ($email) = @_;
+
+	my $dbh = DA::getHandle($_::DB_USER_R);
+	my $row = $dbh->selectrow_hashref("SELECT * FROM user_data WHERE email = ?", undef, ($email));
+
 	return $row;
 }
 
