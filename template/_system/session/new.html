@@ -14,15 +14,8 @@
         $if (Err) {$
           <div class="alert alert-danger">
             <p>
-              エラーがあります。ご確認ください。
+              Eメールまたはパスワードが間違っています。ご確認ください。
             </p>
-            <ul>
-              $if (ErrEmailPresence) {$<li>Eメールは必ず入力してください。</li>$}$
-              $if (ErrEmailLength) {$<li>Eメールは256文字以内で入力してください。</li>$}$
-              $if (ErrEmailFormat) {$<li>Eメールの形式が不正です。</li>$}$
-              $if (ErrPasswordPresence) {$<li>パスワードは必ず入力してください。</li>$}$
-              $if (ErrPasswordLength) {$<li>パスワードは8-256文字で入力してください。</li>$}$
-            </ul>
           </div>
         $}$
         <form method="post" action="$CON:root_url$/session">
