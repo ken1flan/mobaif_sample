@@ -44,6 +44,14 @@ sub main {
 		MLog::write("$_::LOG_DIR/debug", "after DA::reset()");
 
 		MobileEnv::set();       # モバイル用環境変数を設定
+
+		# Cookie設定
+		my %cookies = fetch CGI::Cookie;
+		$_::C = \%cookies;
+
+		# セッション設定
+		_restore_or_create_session();
+
 		$_::F = new Request();  # リクエストパラメータを取得
 		$_::U = new UserData(); # ユーザ情報を取得
 
@@ -51,15 +59,6 @@ sub main {
 		$func = $_::DEFAULT_PAGE if ($func =~ /^\./);
 		$func = $_::DEFAULT_PAGE if ($func eq '');
 		$func = '.404'           if (!exists($_::PAGE{$func}));
-
-		#-------------------------------
-		# Cookie設定
-		my %cookies = fetch CGI::Cookie;
-		$_::C = \%cookies;
-
-		#-------------------------------
-		# セッション設定
-		_restore_or_create_session();
 
 		#-------------------------------
 		# 処理ホスト名取得（Request.pm の make(SSL)BasePath で使われる）
