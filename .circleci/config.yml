@@ -15,6 +15,9 @@ jobs:
     working_directory: /usr/local/lib/mobalog
     steps:
       - checkout
+      - run:
+          name: Set data dir permission
+          command: chmod -R a+w data
       - restore_cache:
           key: cpanfile-cache-{{ .Environment.CI_CACHE_KEY }}-{{ checksum "cpanfile.snapshot" }}
       - run:
