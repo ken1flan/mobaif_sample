@@ -37,6 +37,8 @@ sub pageDestroy {
 	my $func = shift;
 	my $rhData = {};
 
+	Session::destroy();
+
 	my $html = HTMLTemplate::insert("session/destroy", $rhData);
 	Response::output(\$html);
 }

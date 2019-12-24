@@ -26,7 +26,7 @@ describe 'Session' => sub {
     $dbh->do('TRUNCATE TABLE user_data;');
   };
 
-  it 'ログインができること' => sub {
+  it 'ログイン、ログアウトができること' => sub {
     # ログインページを訪れる。
     $mech->get('http://127.0.0.1/session/new');
 
@@ -39,6 +39,14 @@ describe 'Session' => sub {
     $mech->get_set_value(name=> 'password', value=> 'password');
     $mech->click('login');
     ok($mech->content =~ 'ログインしました。');
+
+    # トップページを訪れる。
+    $mech->get('http://127.0.0.1/');
+    ok($mech->content =~ 'ログイン中');
+
+    # ログアウト
+    $mech->get('http://127.0.0.1/session/destroy');
+    ok($mech->content =~ 'ログアウトしました。');
   };
 
 };
