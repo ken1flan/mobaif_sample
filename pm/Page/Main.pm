@@ -145,7 +145,7 @@ FUNC_START:
 	}
 
 FUNC_END:
-
+	$_::S->close();
 	DA::release();
 	MLog::write("$_::LOG_DIR/debug", "after DA::release()");
 }
