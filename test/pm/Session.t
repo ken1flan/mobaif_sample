@@ -63,6 +63,30 @@ describe 'Session' => sub {
       };
     };
   };
+
+  describe 'destroy' => sub {
+    before each => sub {
+      $_::S = new CGI::Session("driver:File", undef, {Directory=> $_::SESSION_DIR});
+    };
+
+    context 'sessionにuser_idが保存されていないとき' => sub {
+      it 'パラメータからuser_idが削除されていること' => sub {
+        Session::destroy();
+        ok(!defined($_::S->param('user_id')));
+      };
+    };
+
+    context 'sessionにuser_idが保存されているとき' => sub {
+      before each => sub {
+        $_::S->param('user_id', 1);
+      };
+
+      it 'パラメータからuser_idが削除されていること' => sub {
+        Session::destroy();
+        ok(!defined($_::S->param('user_id')));
+      };
+    };
+  };
 };
 
 runtests unless caller;

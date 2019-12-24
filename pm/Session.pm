@@ -22,4 +22,8 @@ sub create {
   return 1;
 }
 
+sub destroy {
+  $_::S->clear(['user_id']);
+}
+
 1;
