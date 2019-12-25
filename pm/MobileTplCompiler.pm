@@ -187,7 +187,6 @@ sub compile_one {
 	processPreSTY (\$text, $type, $rhStyle);
 	processPreCON (\$text, $type, $rhConst);
 	processPreENC (\$text, $type);
-	processPrePath(\$text, $srcName);
 	processPreTags(\$text, $type);
 	processPreMoji(\$text, $type);
 	processPreDate(\$text, $type);

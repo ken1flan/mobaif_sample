@@ -41,6 +41,31 @@ describe 'Func::User' => sub {
     };
   };
 
+  describe 'find_by_email' => sub {
+    before each => sub {
+      Func::User::create({email => 'foobar@example.com', nickname => 'foobar', password => 'password'});
+      DA::commit;
+    };
+
+    context '存在しないユーザのemailを指定したとき' => sub {
+      my $email = 'f00bar@example.com';
+
+      it 'undefであること' => sub {
+        my $user = Func::User::find_by_email($email);
+        ok(!defined($user));
+      };
+    };
+
+    context '存在するユーザのemailを指定したとき' => sub {
+      my $email = 'foobar@example.com';
+
+      it '取得できること' => sub {
+        my $user = Func::User::find_by_email($email);
+        ok($user->{nickname} eq 'foobar');
+      };
+    };
+  };
+
   describe 'validate' => sub {
     describe 'email' => sub {
       context 'undefのとき' => sub {

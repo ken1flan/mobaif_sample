@@ -1,0 +1,38 @@
+<html>
+<head>
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
+</head>
+<body>
+  <div class="container">
+    $INC:navbar$
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>ログイン</h1>
+        $if (Err) {$
+          <div class="alert alert-danger">
+            <p>
+              Eメールまたはパスワードが間違っています。ご確認ください。
+            </p>
+          </div>
+        $}$
+        <form method="post" action="$CON:root_url$/session">
+          <div class="form-group">
+            <label for="email">Eメール</label>
+            <input type="text" class="form-control" name="email" id="email" aria-describedby="label-email" placeholder="foo@example.com" value="$=h:email$">
+          </div>
+          <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" class="form-control" name="password" id="password" aria-describedby="label-password" placeholder="パスワード">
+          </div>
+          <button type="submit" class="btn btn-success" name="login">ログイン</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
+</body>
+</html>
