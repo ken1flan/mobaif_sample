@@ -49,6 +49,11 @@ create table articles (
   user_id          int         unsigned not null, # ユーザID
   title            varchar(256)         not null, # タイトル
   body             text                 not null, # 本文
+  created_at       datetime             not null,
+  updated_at       datetime             not null,
 
   primary key(id)
 ) engine=InnoDB;
+
+alter table articles
+ add index i_articles_user_id (user_id);
