@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+MOBA_DIR=${SCRIPT_DIR}/..
+
+MOBA_DIR=${MOBA_DIR} carton exec prove $@
