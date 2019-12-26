@@ -16,10 +16,18 @@ describe 'Func::Article' => sub {
   };
 
   describe 'find' => sub {
+    before each => sub {
+      my $params = {user_id => 1, title => 'some title', body => 'about something'};
+      Func::Article::create($params);
+      DA::commit();
+    };
 
-    it 'TODO' => sub {
-      # TODO
-      ok(1);
+    it '取得できること' => sub {
+      my $article = Func::Article::find(1);
+
+      ok($article->{user_id} == 1);
+      ok($article->{title} eq 'some title');
+      ok($article->{body} eq 'about something');
     };
   };
 
@@ -38,11 +46,18 @@ describe 'Func::Article' => sub {
       ok(1);
     };
   };
-  describe 'create' => sub {
 
-    it 'TODO' => sub {
-      # TODO
-      ok(1);
+  describe 'create' => sub {
+    my $params = {user_id => 1, title => 'some title', body => 'about something'};
+
+    it '登録されること' => sub {
+      Func::Article::create($params);
+      DA::commit();
+
+      my $article = Func::Article::find(1);
+      ok($article->{user_id} == 1);
+      ok($article->{title} eq 'some title');
+      ok($article->{body} eq 'about something');
     };
   };
 

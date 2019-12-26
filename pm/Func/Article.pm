@@ -10,7 +10,9 @@ use DA;
 sub find {
   my ($id) = @_;
 
-  # TODO
+	my $dbh = DA::getHandle($_::DB_USER_R);
+	my $row = $dbh->selectrow_hashref("SELECT * FROM articles WHERE id = ?", undef, ($id));
+	return $row;
 }
 
 sub search_by_user_id {
@@ -28,7 +30,11 @@ sub verify {
 sub create {
   my ($params) = @_;
 
-  # TODO
+	my $dbh = DA::getHandle($_::DB_USER_W);
+	$dbh->do("INSERT INTO articles(user_id, title, body, created_at, updated_at)
+	         VALUE(?, ?, ?, NOW(), NOW())",
+	         undef, $params->{user_id}, $params->{title}, $params->{body});
+  return 1;
 }
 
 sub update {
