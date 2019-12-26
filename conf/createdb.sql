@@ -43,3 +43,12 @@ create table user_data (
 alter table user_data
  add unique index i1 (subscr_id),
  add unique index i2 (serial_id);
+
+create table articles (
+  id               int         unsigned not null auto_increment, # 記事ID
+  user_id          int         unsigned not null, # ユーザID
+  title            varchar(256)         not null, # タイトル
+  body             text                 not null, # 本文
+
+  primary key(id)
+) engine=InnoDB;
