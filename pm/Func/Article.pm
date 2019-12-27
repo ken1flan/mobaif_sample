@@ -21,7 +21,7 @@ sub search_by_user_id {
   # TODO
 }
 
-sub verify {
+sub validate {
   my ($params) = @_;
 
   # TODO

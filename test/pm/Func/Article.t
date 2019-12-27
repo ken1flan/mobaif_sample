@@ -39,7 +39,7 @@ describe 'Func::Article' => sub {
     };
   };
 
-  describe 'verify' => sub {
+  describe 'validate' => sub {
 
     it 'TODO' => sub {
       # TODO
