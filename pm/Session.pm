@@ -7,6 +7,10 @@ use Data::Dumper;
 use Func::User;
 use Text::Password::SHA;
 
+sub logined {
+  return defined($_::S->param('user_id'));
+}
+
 sub create {
   my ($email, $password) = @_;
 

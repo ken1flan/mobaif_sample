@@ -12,7 +12,13 @@ use Func::User;
 use Text::Password::SHA;
 
 describe 'Session' => sub {
-  my $dbh = DA::getHandle($_::DB_USER_W);
+  my $dbh;
+
+  before each => sub {
+    $dbh = DA::getHandle($_::DB_USER_W);
+    $_::S = new CGI::Session("driver:File", undef, {Directory=> $_::SESSION_DIR})
+  };
+
   after each => sub {
     $dbh->do('TRUNCATE TABLE user_data;');
   };
@@ -22,8 +28,6 @@ describe 'Session' => sub {
       before each => sub {
         Func::User::create({ nickname => 'foobar', email => 'foobar@example.com', password => 'password' });
         DA::commit();
-
-        $_::S = new CGI::Session("driver:File", undef, {Directory=> $_::SESSION_DIR})
       };
 
       context 'email = f00@example.com のとき' => sub {
@@ -64,11 +68,34 @@ describe 'Session' => sub {
     };
   };
 
-  describe 'destroy' => sub {
+  describe 'logined' => sub {
     before each => sub {
-      $_::S = new CGI::Session("driver:File", undef, {Directory=> $_::SESSION_DIR});
+      Func::User::create({ nickname => 'foobar', email => 'foobar@example.com', password => 'password' });
+      DA::commit();
     };
 
+    context 'ログインしていないとき' => sub {
+      it 'falseが返ること' => sub {
+        my $ret = Session::logined();
+
+        ok(!$ret);
+      };
+    };
+
+    context 'ログインしているとき' => sub {
+      before each => sub {
+        Session::create('foobar@example.com', 'password');
+      };
+
+      it 'trueが返ること' => sub {
+        my $ret = Session::logined();
+
+        ok($ret);
+      };
+    };
+  };
+
+  describe 'destroy' => sub {
     context 'sessionにuser_idが保存されていないとき' => sub {
       it 'パラメータからuser_idが削除されていること' => sub {
         Session::destroy();
