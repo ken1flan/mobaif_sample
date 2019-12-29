@@ -1,21 +1,27 @@
-<!-- 要会員登録 -->
 <html>
 <head>
-<title>$CON:title$</title>
-$INC:nocache$
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
 </head>
-<body $STY:attr-body$>
-$INC:header:title=はじめての方へ$
-$INC:small$
-<br>
-<center>
-ここから先は会員<br>
-登録が必要です。<br>
-<br>
-<a href="$=b:BasePath$/_r00">⇒会員登録</a><br>
-</center>
-<br>
-$INC:/small$
-$INC:footer$
+<body>
+  <div class="container">
+    $INC:navbar$
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card mt-3" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">ログインが必要です。</h5>
+            <p class="card-text">ユーザ登録をされていない方は下記のリンクから登録することができます。ユーザ登録がお済みの場合はログインしてください。</p>
+            <a href="/user/new" class="card-link" name="user_new">ユーザ登録</a>
+            <a href="/session/new" class="card-link" name="login">ログイン</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
 </body>
 </html>
