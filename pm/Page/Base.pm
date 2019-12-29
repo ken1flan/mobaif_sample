@@ -10,10 +10,12 @@ use strict;
 use MobaConf;
 use HTMLTemplate;
 use Common;
+use Flash;
 use Response;
+use Session;
 
 #-----------------------------
-# サポート外機種の場合 
+# サポート外機種の場合
 
 sub pageNoSupport {
 	my $rhData = {};
@@ -22,7 +24,7 @@ sub pageNoSupport {
 }
 
 #-----------------------------
-# proxy 経由の場合の場合 
+# proxy 経由の場合の場合
 
 sub pageNoProxy {
 	my $rhData = {};
@@ -43,9 +45,15 @@ sub pageNoUID {
 # 会員登録必須画面（ようこそ画面）
 
 sub pageWelcome {
-	my $rhData = {};
-	my $html = HTMLTemplate::insert('base/welcome', $rhData);
-	Response::output(\$html, 'no-cache');
+
+	if (Session::logined) {
+		Flash::set('ログインしています。', 'warning');
+		Response::redirect('/');
+	} else {
+		my $rhData = {};
+		my $html = HTMLTemplate::insert('base/welcome', $rhData);
+		Response::output(\$html, 'no-cache');
+	}
 }
 
 #-----------------------------
@@ -54,7 +62,7 @@ sub pageWelcome {
 sub pageServSt {
 	my $func = shift;
 	my $rhData = {};
-	
+
 	my $page = '';
 	if      ($_::U->{SERV_ST_ERR} & 1) { # 自主退会
 		$page = 'serv1';
@@ -84,18 +92,18 @@ sub page404 {
 sub pageStatic {
 	my $func = shift;
 	my $rhData = {};
-	
+
 	my $page = $_::F->{page};
-	
+
 	if ($page =~ /\.\./ || $page =~ /[^\da-z\.\/\-\_]/i) {
 		die "Invalid Page Access '$page'\n";
 	}
-	
+
 	$page .= 'index.html' if ($page =~ m#/$#);
 	$page  = $`           if ($page =~ m#\.html$#);
-	
+
 	my $html = HTMLTemplate::insert("../_html/$page", $rhData);
-	
+
 	if ($html ne '') {
 		Response::output(\$html);
 	} else {
@@ -112,21 +120,21 @@ sub pageStatic {
 
 sub pageRedirect {
 	my $rhData = {};
-	
+
 	$rhData->{Func} = ($_::F->{f} ne '') ? "_$_::F->{f}" : '';
-	
+
 	my $rhHidden = Common::cloneHash($_::F, '^[^_]');
 	delete($rhHidden->{f});
 	delete($rhHidden->{uid});
 	delete($rhHidden->{sid});
 	delete($rhHidden->{guid});
 	$rhData->{Hidden}  = Common::makeHidden($rhHidden);
-	
+
 	$rhData->{BaseURL} = $ENV{MB_SSL} ?
 		Request::makeSSLBasePath() :
 		Request::makeBasePath();
 	my $html = HTMLTemplate::insert('base/redirect', $rhData);
-	
+
 	Response::output(\$html, 'no-cache');
 }
 
@@ -135,7 +143,7 @@ sub pageRedirect {
 
 sub pageError {
 	my $e = shift;
-	
+
 	if ($_::TEST_MODE) {
 		my $debug_msg = MException::makeMsg($e). "\n\n";
 		my @caller;
@@ -147,9 +155,9 @@ sub pageError {
 		}
 		$e->{DEBUG_MSG} = $debug_msg;
 	}
-	
+
 	my $html = HTMLTemplate::insert('base/error', $e);
-	
+
 	Response::output(\$html, 'no-cache');
 }
 
