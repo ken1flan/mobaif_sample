@@ -12,6 +12,7 @@ MTemplate.pm に渡す共通パラメータを設定する。
 use strict;
 use MobaConf;
 use MTemplate;
+use Flash;
 
 # small タグ（キャリアデフォルト）
 
@@ -97,6 +98,10 @@ sub insert {
 	$rhParams2->{BROWSER_W}   = $ENV{MB_BROWSER_W};
 	$rhParams2->{BROWSER_W2}  = $ENV{MB_BROWSER_W2};
 	$rhParams2->{CHARS_W}     = $ENV{MB_CHARS_W};
+
+	# フラッシュメッセージ
+	($rhParams2->{FLASH_MESSAGE}, $rhParams2->{FLASH_TYPE}) = Flash::get();
+	Flash::clear();
 
 	# テンプレート処理
 

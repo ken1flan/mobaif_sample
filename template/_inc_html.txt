@@ -78,6 +78,15 @@ $INCDEF:navbar$
     </ul>
   </div>
 </nav>
+$ if (FLASH_MESSAGE) { $
+  <div class="row py-3">
+    <div class="col">
+      <div class="alert alert-$=h:FLASH_TYPE$">
+        $=h:FLASH_MESSAGE$
+      </div>
+    </div>
+  </div>
+$ } $
 $/INCDEF$
 
 #----------------------------------------

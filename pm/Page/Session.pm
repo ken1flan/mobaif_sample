@@ -4,6 +4,8 @@ use strict;
 use MobaConf;
 
 use Common;
+use Encode;
+use Flash;
 use HTMLTemplate;
 use Response;
 use Session;
@@ -22,25 +24,26 @@ sub pageCreate {
 
 	my $template_name;
 	if (Session::create($_::F->{email}, $_::F->{password})) {
-		$template_name = 'session/create';
+		Flash::set('ログインしました。', 'success');
+
+		Response::redirect('/');
 	} else {
 		$rhData->{Err} = 1;
 		$rhData->{email} = $_::F->{email};
-		$template_name = 'session/new';
-	}
 
-	my $html = HTMLTemplate::insert($template_name, $rhData);
-	Response::output(\$html);
+		my $html = HTMLTemplate::insert('session/new', $rhData);
+	  Response::output(\$html);
+	}
 }
 
 sub pageDestroy {
 	my $func = shift;
 	my $rhData = {};
 
+	Flash::set('ログアウトしました。', 'success');
 	Session::destroy();
 
-	my $html = HTMLTemplate::insert("session/destroy", $rhData);
-	Response::output(\$html);
+	Response::redirect('/');
 }
 
 1;
