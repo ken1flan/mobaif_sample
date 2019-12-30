@@ -44,6 +44,7 @@ sub output {
 
 sub redirect {
 	my $url = shift;
+	print "Status: 302 Found\r\n";
 	print "Location: $url\r\n";
 	print "Connection: close\r\n";
 	_print_cookies($_::C);
