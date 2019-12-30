@@ -10,10 +10,35 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>my/article/index</h1>
-        <p>
-          雛形のページです。
-        </p>
+        <h1>記事一覧</h1>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">タイトル</th scope="col">
+              <th scope="col">更新日</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            $ loop(articles) { $
+              <tr>
+                <th scope="row">
+                  $=h:id$
+                </th>
+                <td>
+                  <a href="/my/articles/$=h:id$">$=h:title$</a>
+                </td>
+                <td>
+                  $=h:updated_at$
+                </td>
+                <td>
+                  <a class="btn btn-primary" href="/my/articles/$=h:id$/edit">編集</a>
+                </td>
+              </tr>
+            $ } $
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

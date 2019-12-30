@@ -17,6 +17,9 @@ sub pageIndex {
 	my $func = shift;
 	my $rhData = {};
 
+	my $articles = Func::Article::search_by_user_id($_::U->{USER_ID});
+	my $rhData->{articles} = $articles;
+
 	my $html = HTMLTemplate::insert("my/article/index", $rhData);
 	Response::output(\$html);
 }

@@ -51,6 +51,12 @@ describe 'My::Article' => sub {
       ok($mech->content =~ 'ログインが必要です。');
     };
 
+    it '記事一覧を見れないこと' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}");
+
+      ok($mech->content =~ 'ログインが必要です。');
+    };
+
     it '記事を見れないこと' => sub {
       $mech->get("http://127.0.0.1/my/articles/$user_article->{id}");
 
@@ -79,6 +85,13 @@ describe 'My::Article' => sub {
       ok($mech->content =~ '登録しました。');
       ok($mech->content =~ 'article title');
       ok($mech->content =~ 'article body');
+    };
+
+    it '自分の記事一覧を見ることができること' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}");
+
+      ok($mech->content =~ 'user article title');
+      ok($mech->content !~ 'other article title');
     };
 
     it '自分の記事を見ることができること' => sub {
