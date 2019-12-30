@@ -26,10 +26,15 @@ sub pageShow {
 	my $rhData = {};
 
 	my $article = Func::Article::find($_::F->{id});
-	Common::mergeHash($rhData, $article);
 
-	my $html = HTMLTemplate::insert("my/article/show", $rhData);
-	Response::output(\$html);
+	if ($article->{user_id} == $_::U->{USER_ID}) {
+		Common::mergeHash($rhData, $article);
+		my $html = HTMLTemplate::insert("my/article/show", $rhData);
+		Response::output(\$html);
+	} else {
+		Flash::set('見ることができません。', 'warning');
+		Response::redirect('/my/articles');
+	}
 }
 
 sub pageNew {
