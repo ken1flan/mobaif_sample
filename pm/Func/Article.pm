@@ -19,6 +19,14 @@ sub find {
 	return $row;
 }
 
+sub find_last_by_user_id {
+  my ($user_id) = @_;
+
+	my $dbh = DA::getHandle($_::DB_USER_R);
+	my $row = $dbh->selectrow_hashref("SELECT * FROM articles WHERE user_id = ? ORDER BY updated_at DESC, id DESC LIMIT 1", undef, ($user_id));
+	return $row;
+}
+
 sub search_by_user_id {
   my ($user_id) = @_;
 
