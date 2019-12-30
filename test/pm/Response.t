@@ -47,6 +47,7 @@ describe 'Response' => sub {
         my $url = "https://www.example.com/user/new";
         trap { Response::redirect($url) };
         my $stdout = $trap->stdout;
+        ok($stdout =~ /Status: 302 Found/);
         ok($stdout =~ /Location: $url/);
         ok($stdout =~ /Connection: close/);
       };
@@ -59,6 +60,7 @@ describe 'Response' => sub {
         my $url = "https://www.example.com/user/new";
         trap { Response::redirect($url) };
         my $stdout = $trap->stdout;
+        ok($stdout =~ /Status: 302 Found/);
         ok($stdout =~ /Location: $url/);
         ok($stdout =~ /Set-Cookie:foo=bar; path=\//);
         ok($stdout =~ /Connection: close/);
