@@ -10,12 +10,30 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>my/article/new</h1>
-        <p>
-          雛形のページです。
-        </p>
+        <h1>記事作成</h1>
+        $if (Err) {$
+          <div class="alert alert-danger">
+            <p>
+              エラーがあります。ご確認ください。
+            </p>
+            <ul>
+              $if (ErrTitlePresence) {$<li>タイトルは必ず入力してください。</li>$}$
+              $if (ErrTitleLength) {$<li>タイトルは256文字までで入力してください。</li>$}$
+              $if (ErrBodyPresence) {$<li>本文は必ず入力してください。</li>$}$
+              $if (ErrBodyLength) {$<li>本文は32767文字以内で入力してください。</li>$}$
+            </ul>
+          </div>
+        $}$
         <form method="post" action="$CON:root_url$/my/articles">
-          <input type="submit">
+          <div class="form-group">
+            <label for="title">タイトル</label>
+            <input type="text" class="form-control" name="title" id="title" aria-describedby="label-title" placeholder="記事のタイトル" value="$=h:title$">
+          </div>
+          <div class="form-group">
+            <label for="body">本文</label>
+            <textarea class="form-control" name="body" id="body" aria-describedby="label-body" rows="10">$=h:body$</textarea>
+          </div>
+          <button type="submit" class="btn btn-success" name="submit">登録</button>
         </form>
       </div>
     </div>

@@ -6,14 +6,17 @@
 <body>
   <div class="container">
     $INC:navbar$
-  </div>
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>my/article/show</h1>
-        <p>
-          雛形のページです。
-        </p>
+        <div class="card mt-3">
+          <div class="card-body">
+            <h1 class="card-title">$=h:title$</h1>
+            <pre class="card-text">
+              $=h:body$
+            </pre>
+          </div>
+        </div>
       </div>
     </div>
   </div>

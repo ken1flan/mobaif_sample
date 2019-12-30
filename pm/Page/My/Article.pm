@@ -4,9 +4,11 @@ use strict;
 use MobaConf;
 
 use Common;
-use HTMLTemplate;
-use Response;
 use DA;
+use Flash;
+use HTMLTemplate;
+use MLog;
+use Response;
 
 use Func::User;
 use Func::Article;
@@ -23,6 +25,9 @@ sub pageShow {
 	my $func = shift;
 	my $rhData = {};
 
+	my $article = Func::Article::find($_::F->{id});
+	Common::mergeHash($rhData, $article);
+
 	my $html = HTMLTemplate::insert("my/article/show", $rhData);
 	Response::output(\$html);
 }
@@ -38,9 +43,24 @@ sub pageNew {
 sub pageCreate {
 	my $func = shift;
 	my $rhData = {};
+	Common::mergeHash($rhData, $_::F);
 
-	my $html = HTMLTemplate::insert("my/article/create", $rhData);
-	Response::output(\$html);
+	$rhData->{user_id} = $_::U->{USER_ID};
+	my $errors = Func::Article::validate($rhData);
+	my @keys = keys %$errors;
+	my $html = "";
+	if (grep { /^Err/ } @keys) {
+		Common::mergeHash($rhData, $errors);
+		$html = HTMLTemplate::insert("my/article/new", $rhData);
+		Response::output(\$html);
+	} else {
+		Func::Article::create($rhData);
+		DA::commit();
+		my $article = Func::Article::find_last_by_user_id($_::U->{USER_ID});
+
+		Flash::set('ÅĞÏ¿¤·¤Ş¤·¤¿¡£', 'success');
+		Response::redirect("/my/articles/$article->{id}");
+	}
 }
 
 sub pageEdit {
