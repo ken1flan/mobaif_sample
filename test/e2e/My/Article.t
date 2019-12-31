@@ -68,6 +68,12 @@ describe 'My::Article' => sub {
 
       ok($mech->content =~ 'ログインが必要です。');
     };
+
+    it '記事を削除できないこと' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}/destroy");
+
+      ok($mech->content =~ 'ログインが必要です。');
+    };
   };
 
   context 'ログインしているとき' => sub {
@@ -135,6 +141,19 @@ describe 'My::Article' => sub {
       $mech->get("http://127.0.0.1/my/articles/$other_article->{id}/edit");
 
       ok($mech->content =~ '編集することができません。');
+    };
+
+    it '記事を削除できること' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}/destroy");
+
+      ok($mech->content =~ '削除しました。');
+      ok($mech->content !~ 'user article title');
+    };
+
+    it '他の人の記事を削除できないこと' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$other_article->{id}/destroy");
+
+      ok($mech->content =~ '削除することができません。');
     };
   };
 };

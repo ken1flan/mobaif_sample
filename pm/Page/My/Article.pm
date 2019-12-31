@@ -119,8 +119,18 @@ sub pageDestroy {
 	my $func = shift;
 	my $rhData = {};
 
-	my $html = HTMLTemplate::insert("my/article/destroy", $rhData);
-	Response::output(\$html);
+	my $article = Func::Article::find($_::F->{id});
+
+	if ($article->{user_id} == $_::U->{USER_ID}) {
+		Func::Article::destroy($article->{id});
+		DA::commit();
+
+		Flash::set('削除しました。', 'success');
+		Response::redirect('/my/articles');
+	} else {
+		Flash::set('削除することができません。', 'warning');
+		Response::redirect('/my/articles');
+	}
 }
 
 1;
