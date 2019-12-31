@@ -15,7 +15,19 @@ sub find {
   my ($id) = @_;
 
 	my $dbh = DA::getHandle($_::DB_USER_R);
-	my $row = $dbh->selectrow_hashref("SELECT * FROM articles WHERE id = ?", undef, ($id));
+	my $row = $dbh->selectrow_hashref("
+			SELECT
+				articles.id
+			, articles.title
+			, articles.body
+			, articles.updated_at
+			, articles.created_at
+			, articles.user_id
+			, user_data.nickname
+			FROM articles
+			JOIN user_data ON user_data.user_id = articles.user_id
+			WHERE id = ?
+		", undef, ($id));
 	return $row;
 }
 
@@ -25,6 +37,24 @@ sub find_last_by_user_id {
 	my $dbh = DA::getHandle($_::DB_USER_R);
 	my $row = $dbh->selectrow_hashref("SELECT * FROM articles WHERE user_id = ? ORDER BY updated_at DESC, id DESC LIMIT 1", undef, ($user_id));
 	return $row;
+}
+
+sub all {
+	my $dbh = DA::getHandle($_::DB_USER_R);
+	my $rows = $dbh->selectall_arrayref("
+			SELECT
+				articles.id
+			, articles.title
+			, articles.body
+			, articles.updated_at
+			, articles.created_at
+			, articles.user_id
+			, user_data.nickname
+			FROM articles
+			JOIN user_data ON user_data.user_id = articles.user_id
+			ORDER BY updated_at DESC, id DESC
+    ", {Columns=>{}});
+	return $rows;
 }
 
 sub search_by_user_id {
