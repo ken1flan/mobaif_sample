@@ -75,32 +75,44 @@ sub pageEdit {
 	my $func = shift;
 	my $rhData = {};
 
-	my $html = HTMLTemplate::insert("my/article/edit", $rhData);
-	Response::output(\$html);
+	my $article = Func::Article::find($_::F->{id});
+
+	if ($article->{user_id} == $_::U->{USER_ID}) {
+		Common::mergeHash($rhData, $article);
+		my $html = HTMLTemplate::insert("my/article/edit", $rhData);
+		Response::output(\$html);
+	} else {
+		Flash::set('編集することができません。', 'warning');
+		Response::redirect('/my/articles');
+	}
 }
 
 sub pageUpdate {
 	my $func = shift;
 	my $rhData = {};
+	Common::mergeHash($rhData, $_::F);
 
-	my $html = HTMLTemplate::insert("my/article/update", $rhData);
-	Response::output(\$html);
-}
+	my $article = Func::Article::find($_::F->{id});
 
-sub pageEdit {
-	my $func = shift;
-	my $rhData = {};
-
-	my $html = HTMLTemplate::insert("my/article/edit", $rhData);
-	Response::output(\$html);
-}
-
-sub pageUpdate {
-	my $func = shift;
-	my $rhData = {};
-
-	my $html = HTMLTemplate::insert("my/article/update", $rhData);
-	Response::output(\$html);
+	if ($article->{user_id} == $_::U->{USER_ID}) {
+		$rhData->{user_id} = $_::U->{USER_ID};
+		my $errors = Func::Article::validate($rhData);
+		my @keys = keys %$errors;
+		if (grep { /^Err/ } @keys) {
+			Common::mergeHash($rhData, $errors);
+			my $html = HTMLTemplate::insert("my/article/edit", $rhData);
+			Response::output(\$html);
+		} else {
+			Func::Article::update($rhData);
+			DA::commit();
+			my $article = Func::Article::find_last_by_user_id($_::U->{USER_ID});
+			Flash::set('更新しました。', 'success');
+			Response::redirect("/my/articles/$article->{id}");
+		}
+	} else {
+		Flash::set('編集することができません。', 'warning');
+		Response::redirect('/my/articles');
+	}
 }
 
 sub pageDestroy {

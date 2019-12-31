@@ -62,6 +62,12 @@ describe 'My::Article' => sub {
 
       ok($mech->content =~ 'ログインが必要です。');
     };
+
+    it '記事を編集できないこと' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}/edit");
+
+      ok($mech->content =~ 'ログインが必要です。');
+    };
   };
 
   context 'ログインしているとき' => sub {
@@ -105,6 +111,30 @@ describe 'My::Article' => sub {
       $mech->get("http://127.0.0.1/my/articles/$other_article->{id}");
 
       ok($mech->content =~ '見ることができません。');
+    };
+
+    it '記事を編集できること' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}/edit");
+      ok($mech->content =~ '記事編集');
+
+      $mech->form_number(1);
+      $mech->set_fields(title=> '', body=> 'updated article body');
+      $mech->click('submit');
+      ok($mech->content =~ 'エラーがあります。');
+
+      $mech->form_number(1);
+      $mech->set_fields(title=> 'updated article title', body=> 'updated article body');
+      $mech->click('submit');
+
+      ok($mech->content =~ '更新しました。');
+      ok($mech->content =~ 'updated article title');
+      ok($mech->content =~ 'updated article body');
+    };
+
+    it '他の人の記事を編集できないこと' => sub {
+      $mech->get("http://127.0.0.1/my/articles/$other_article->{id}/edit");
+
+      ok($mech->content =~ '編集することができません。');
     };
   };
 };
