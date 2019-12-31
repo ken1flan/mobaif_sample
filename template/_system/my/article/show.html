@@ -1,0 +1,28 @@
+<html>
+<head>
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
+</head>
+<body>
+  <div class="container">
+    $INC:navbar$
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card mt-3">
+          <div class="card-body">
+            <h1 class="card-title">$=h:title$</h1>
+            <pre class="card-text">
+              $=h:body$
+            </pre>
+            <a href="/my/articles/$=h:id$/edit" class="btn btn-primary">ï“èW</a>
+            <a href="/my/articles/$=h:id$/destroy" class="btn btn-danger" onclick="return confirm('$=h:title$ÇçÌèúÇµÇ‹Ç∑Ç©ÅH')">çÌèú</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
+</body>
+</html>

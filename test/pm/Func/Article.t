@@ -39,6 +39,62 @@ describe 'Func::Article' => sub {
     };
   };
 
+  describe 'find_last_by_user_id' => sub {
+    my $user_id = undef;
+    my $author = undef;
+    my $other = undef;
+
+    before each => sub {
+      Func::User::create({ nickname => 'author', email => 'author@example.com', password => 'password' });
+      Func::User::create({ nickname => 'other', email => 'other@example.com', password => 'password' });
+      DA::commit();
+
+      $author = Func::User::find_by_email('author@example.com');
+      $other = Func::User::find_by_email('other@example.com');
+
+      Func::Article::create({user_id => $author->{user_id}, title => 'author article 1', body => 'about author article 1'});
+      Func::Article::create({user_id => $author->{user_id}, title => 'author article 2', body => 'about author article 2'});
+      DA::commit();
+    };
+
+    context 'user_id = undef のとき' => sub {
+      before each => sub {
+        $user_id = undef;
+      };
+
+      it 'undefであること' => sub {
+        my $article = Func::Article::find_last_by_user_id($user_id);
+
+        ok(!defined($article));
+      };
+    };
+
+    context 'user_id = other.user_id のとき' => sub {
+      before each => sub {
+        $user_id = $other->{user_id};
+      };
+
+      it 'undefであること' => sub {
+        my $article = Func::Article::find_last_by_user_id($user_id);
+
+        ok(!defined($article));
+      };
+    };
+
+    context 'user_id = author.user_id のとき' => sub {
+      before each => sub {
+        $user_id = $author->{user_id};
+      };
+
+      it 'あとから登録した記事であること' => sub {
+        my $article = Func::Article::find_last_by_user_id($user_id);
+
+        ok($article->{title} eq 'author article 2');
+        ok($article->{body} eq 'about author article 2');
+      };
+    };
+  };
+
   describe 'search_by_user_id' => sub {
     my $user_id = undef;
     my $other = undef;

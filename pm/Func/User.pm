@@ -216,7 +216,7 @@ sub create {
 	my $hashed_password = $pwd->encrypt($params->{password});
 	my $dbh = DA::getHandle($_::DB_USER_W);
 	$dbh->do("INSERT INTO user_data(email, nickname, hashed_password, introduction, reg_date, user_st, serv_st, carrier, model_name)
-	         VALUE(?, ?, ?, ?, UNIX_TIMESTAMP(), 0, 0, 'D', 'Dummy')",
+	         VALUE(?, ?, ?, ?, UNIX_TIMESTAMP(), 1, 0, 'D', 'Dummy')",
 	         undef, $params->{email}, $params->{nickname}, $hashed_password, $params->{introduction});
   return 1;
 }
