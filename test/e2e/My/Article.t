@@ -100,7 +100,7 @@ describe 'My::Article' => sub {
     };
 
     it '自分の記事一覧を見ることができること' => sub {
-      $mech->get("http://127.0.0.1/my/articles/$user_article->{id}");
+      $mech->get("http://127.0.0.1/my/articles");
 
       ok($mech->content =~ 'user article title');
       ok($mech->content !~ 'other article title');
