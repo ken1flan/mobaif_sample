@@ -63,6 +63,7 @@ sub insert {
 	if ($_::U->{USER_ID}) {
 		$rhParams2->{MEMBER} = 1;
 		$rhParams2->{USER_ID}  = $_::U->{USER_ID};
+		$rhParams2->{NICKNAME}  = $_::U->{NICKNAME};
 		$rhParams2->{INFO_STR} = $_::U->makeInfoStr();
 	} else {
 		for my $key (qw(MEMBER USER_ID INFO_STR)) {

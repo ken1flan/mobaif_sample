@@ -67,9 +67,9 @@ $INCDEF:navbar$
         <li class="nav-item">
           <a class="nav-link btn btn-primary btn-sm text-light" href="/my/articles/new">記事を書く</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown ml-3">
           <a class="nav-link dropdown-toggle" href="#" id="loginStatus" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            ログイン中
+            $=h:NICKNAME$
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">プロフィール</a>
