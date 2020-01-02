@@ -42,7 +42,7 @@ describe 'Session' => sub {
 
     # トップページを訪れる。
     $mech->get('http://127.0.0.1/');
-    ok($mech->content =~ 'ログイン中');
+    ok($mech->content =~ 'foobar');
 
     # ログアウト
     $mech->get('http://127.0.0.1/session/destroy');

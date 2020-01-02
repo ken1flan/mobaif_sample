@@ -88,6 +88,7 @@ sub getInfo {
 	return undef unless defined($user);
 
 	$self->{USER_ID} = $user->{user_id};
+	$self->{NICKNAME} = $user->{nickname};
 	$self->{USER_ST} = $user->{user_st};
 	$self->{SERV_ST} = $user->{serv_st};
 	$self->{REG_MODEL} = $user->{model_name};
