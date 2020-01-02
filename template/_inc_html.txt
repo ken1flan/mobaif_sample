@@ -53,6 +53,9 @@ $INCDEF:navbar$
           <img src="/i/logo.png" width="30" height="30" alt="mobasif sample">
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/articles">‹LŽ–ˆê——</a>
+      </li>
       $ if (USER_ID) { $
         <li class="nav-item">
           <a class="nav-link" href="/my/articles">Ž©•ª‚Ì‹LŽ–ˆê——</a>
