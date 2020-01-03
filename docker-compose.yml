@@ -10,4 +10,4 @@ services:
       - mariadb
     privileged: true
   mariadb:
-    image: circleci/mariadb:10.3
+    image: mariadb:10.3-bionic
