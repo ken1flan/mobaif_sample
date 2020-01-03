@@ -10,4 +10,9 @@ services:
       - mariadb
     privileged: true
   mariadb:
-    image: circleci/mariadb:10.3
+    image: mariadb:10.3-bionic
+    env_file: ./mariadb/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb/etc/mysql/mariadb.conf.d:/etc/mysql/mariadb.conf.d
