@@ -12,3 +12,5 @@ services:
   mariadb:
     image: mariadb:10.3-bionic
     env_file: ./mariadb/.env
+    volumes:
+      - ./mariadb/etc/mysql/mariadb.conf.d:/etc/mysql/mariadb.conf.d
