@@ -77,6 +77,10 @@ sub _connect {
 			{ CODE => 4002, DBIERR => $DBI::err, MSG => $DBI::errstr });
 	}
 	$dbh->{mariadb_auto_reconnect}    = 0;
+	# eval {
+	# 	$dbh->do('set character_set_server = "cp932"');
+	# 	$dbh->do('set names cp932');
+	# };
 	eval { $dbh->do('set names binary'); };
 
 	return $dbh;

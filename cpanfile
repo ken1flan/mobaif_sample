@@ -1,3 +1,4 @@
+requires "Carp::Always";
 requires "CGI";
 requires "CGI::Fast";
 requires "CGI::Session";
