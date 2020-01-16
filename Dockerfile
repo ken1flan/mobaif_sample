@@ -1,4 +1,5 @@
 FROM centos:7
+
 ENV container docker
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -21,7 +22,7 @@ RUN mkdir /var/log/mobalog && chown apache:apache /var/log/mobalog
 EXPOSE 80
 RUN systemctl enable httpd.service
 
-# mysql
+# mariadb
 RUN yum install -y mariadb mariadb-devel
 
 # perl
