@@ -14,10 +14,7 @@ sub pageMain {
 	my $func = shift;
 	my $rhData = {};
 
-	MLog::write("$_::LOG_DIR/debug", "Page::Top::pageMain");
 	my $html = HTMLTemplate::insert("top/top", $rhData);
-	MLog::write("$_::LOG_DIR/debug", "after HTMLTemplate::insert");
-	MLog::write("$_::LOG_DIR/debug", "$html");
 	Response::output(\$html);
 }
 
