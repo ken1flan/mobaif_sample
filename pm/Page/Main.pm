@@ -41,7 +41,6 @@ sub main {
 
 	eval {
 		DA::reset();
-		MLog::write("$_::LOG_DIR/debug", "after DA::reset()");
 
 		MobileEnv::set();       # モバイル用環境変数を設定
 
@@ -109,12 +108,8 @@ sub main {
 FUNC_START:
 
 	while (1) {
-		MLog::write("$_::LOG_DIR/debug", "loop start");
-
 		eval {
-		  MLog::write("$_::LOG_DIR/debug", "before callPage($func)");
 			callPage($func);
-		  MLog::write("$_::LOG_DIR/debug", "after callPage($func)");
 		};
 
 		if ($@) {
@@ -140,28 +135,24 @@ FUNC_START:
 				last;
 			}
 		}
-		MLog::write("$_::LOG_DIR/debug", "loop end");
 		last;
 	}
 
 FUNC_END:
 	$_::S->close();
 	DA::release();
-	MLog::write("$_::LOG_DIR/debug", "after DA::release()");
 }
 
 #---------------------------------------------------------------------
 
 sub callPage {
 	my $func = shift;
-	MLog::write("$_::LOG_DIR/debug", "start callPage($func)");
 
 	#---------------------------
 	# 要求されたページ情報を取得
 
 	my ($reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName)
 		= @{$_::PAGE{$func}};
-	MLog::write("$_::LOG_DIR/debug", "Page infomation $reqUidSt, $reqUserSt, $reqServSt, $moduleName, $subName");
 
 	#---------------------------
 	# UID_ST 端末情報エラー
@@ -178,7 +169,6 @@ sub callPage {
 	# SERV_ST サービスステータスチェック
 
 	if ($_::U->{SERV_ST} & $reqServSt) {
-		MLog::write("$_::LOG_DIR/debug", "Error SERV_ST");
 		$_::U->{SERV_ST_ERR} = $_::U->{SERV_ST} & $reqServSt;
 		MException::throw({ CHG_FUNC => '.servst' });
 	}
@@ -187,7 +177,6 @@ sub callPage {
 	# USER_ST ユーザステータスチェック
 
 	if ($_::U->{USER_ST} < $reqUserSt) {
-		MLog::write("$_::LOG_DIR/debug", "Error USER_ST");
 		if ($_::U->{USER_ST} == 1) {
 			# ***
 			MException::throw({ CHG_FUNC => 'm01' });
@@ -200,7 +189,6 @@ sub callPage {
 	# メンテ中
 
 	if ($_::MAINTAIN_FUNC{$func}) {
-		MLog::write("$_::LOG_DIR/debug", "Error Maintenance");
 		MException::throw({ REDIRECT =>
 			Request::makeBasePath(). $_::MAINTAIN_FUNC{$func} });
 	}
@@ -210,7 +198,6 @@ sub callPage {
 
 	my $moduleFile = "$moduleName.pm";
 	   $moduleFile =~ s#::#/#g;
-	MLog::write("$_::LOG_DIR/debug", "before require $moduleFile");
 	require $moduleFile;
 	&{"$moduleName\::$subName"}($func);
 }
