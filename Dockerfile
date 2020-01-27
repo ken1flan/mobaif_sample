@@ -18,7 +18,6 @@ RUN yum groupinstall -y "Development Tools"
 # apache
 RUN yum install -y httpd
 RUN yum install -y mod_fcgid
-RUN mkdir /var/log/mobalog && chown apache:apache /var/log/mobalog
 EXPOSE 80
 RUN systemctl enable httpd.service
 
@@ -33,7 +32,6 @@ RUN cpanm Carton
 
 # mobasif
 RUN echo "Include /usr/local/lib/mobalog/conf/httpd.conf" >>  /etc/httpd/conf/httpd.conf
-RUN mkdir -p /var/log/mobalog && chown apache:apache /var/log/mobalog
 COPY src/xs /tmp/xs
 RUN cd /tmp/xs && ./makexs MobaConf && ./makexs MTemplate && ./makexs SoftbankEncode && ./makexs HTMLFast && ./makexs Kcode
 
