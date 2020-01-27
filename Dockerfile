@@ -12,7 +12,6 @@ rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 VOLUME [ "/sys/fs/cgroup" ]
 
-RUN yum install -y wget
 RUN yum groupinstall -y "Development Tools"
 
 # apache
