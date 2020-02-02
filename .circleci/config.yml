@@ -23,13 +23,13 @@ jobs:
       - run:
           name: carton install
           command: carton install
-      - run:
-          name: compile template
-          command: MOBA_DIR=`pwd` carton exec script/tool/compile_template
       - save_cache:
           key: cpanfile-cache-{{ .Environment.CI_CACHE_KEY }}-{{ checksum "cpanfile.snapshot" }}
           paths:
             - local
+      - run:
+          name: compile template
+          command: MOBA_DIR=`pwd` carton exec script/tool/compile_template
       - persist_to_workspace:
           root: .
           paths:
