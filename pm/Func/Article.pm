@@ -146,9 +146,17 @@ sub create {
 	return 0 if $errors->{Err} == 1;
 
 	my $dbh = DA::getHandle($_::DB_USER_W);
-	$dbh->do("INSERT INTO articles(user_id, title, body, created_at, updated_at)
-	         VALUE(?, ?, ?, NOW(), NOW())",
-	         undef, $params->{user_id}, $params->{title}, $params->{body});
+	# $dbh->do("INSERT INTO articles(user_id, title, body, created_at, updated_at)
+	#          VALUE(?, ?, ?, NOW(), NOW())",
+	#          undef, $params->{user_id}, $params->{title}, $params->{body});
+	my $sth = $dbh->prepare("INSERT INTO articles(user_id, title, body, created_at, updated_at)
+	         VALUE(?, ?, ?, NOW(), NOW())");
+	$sth->bind_param(1, $params->{user_id});
+	# $sth->bind_param(2, $params->{title});
+	# $sth->bind_param(3, $params->{body});
+	$sth->bind_param(2, $params->{title}, DBI::SQL_BINARY);
+	$sth->bind_param(3, $params->{body}, DBI::SQL_BINARY);
+	$sth->execute() or die 'Error:' . "\n";;
   return 1;
 }
 
