@@ -1,0 +1,44 @@
+<html>
+<head>
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
+</head>
+<body>
+  <div class="container">
+    $INC:navbar$
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>プロファイル編集</h1>
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <th>ニックネーム</th>
+              <td>$=h:nickname$</td>
+            </tr>
+            <tr>
+              <th>Eメール</th>
+              <td>$=h:email$</td>
+            </tr>
+            <tr>
+              <th>パスワード</th>
+              <td>**********</td>
+            </tr>
+            <tr>
+              <th>自己紹介</th>
+              <td>
+                <pre>
+                  $=h:introduction$
+                </pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="/my/profile/edit" class="btn btn-primary">編集</a>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
+</body>
+</html>

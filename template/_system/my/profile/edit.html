@@ -1,0 +1,58 @@
+<html>
+<head>
+  $INC:common_head_contents$
+  <title>$CON:title$</title>
+</head>
+<body>
+  <div class="container">
+    $INC:navbar$
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>プロファイル編集</h1>
+        $if (Err) {$
+          <div class="alert alert-danger">
+            <p>
+              エラーがあります。ご確認ください。
+            </p>
+            <ul>
+              $if (ErrNicknamePresence) {$<li>ニックネームは必ず入力してください。</li>$}$
+              $if (ErrNicknameLength) {$<li>ニックネームは5-20文字で入力してください。</li>$}$
+              $if (ErrNicknameUnique) {$<li>そのニックネームは他の方に使われています。</li>$}$
+              $if (ErrEmailPresence) {$<li>Eメールは必ず入力してください。</li>$}$
+              $if (ErrEmailLength) {$<li>Eメールは256文字以内で入力してください。</li>$}$
+              $if (ErrEmailFormat) {$<li>Eメールの形式が不正です。</li>$}$
+              $if (ErrNicknameUnique) {$<li>そのEメールは他の方に使われています。</li>$}$
+              $if (ErrPasswordPresence) {$<li>パスワードは必ず入力してください。</li>$}$
+              $if (ErrPasswordLength) {$<li>パスワードは8-256文字で入力してください。</li>$}$
+              $if (ErrIntroductionLength) {$<li>自己紹介は256文字以内で入力してください。</li>$}$
+            </ul>
+          </div>
+        $}$
+        <form method="post" action="$CON:root_url$/my/profile">
+          <div class="form-group">
+            <label for="nickname">ニックネーム</label>
+            <input type="text" class="form-control" name="nickname" id="nickname" placeholder="モバシフ太郎" value="$=h:nickname$">
+          </div>
+          <div class="form-group">
+            <label for="email">Eメール</label>
+            <input type="text" class="form-control" name="email" id="email" aria-describedby="label-email" placeholder="foo@example.com" value="$=h:email$">
+          </div>
+          <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" class="form-control" name="password" id="password" aria-describedby="label-password" placeholder="パスワード">
+          </div>
+          <div class="form-group">
+            <label for="introduction">自己紹介</label>
+            <textarea class="form-control" name="introduction" id="introduction" aria-describedby="label-introduction">$=h:introduction$</textarea>
+          </div>
+          <button type="submit" class="btn btn-success" name="regist">更新</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  $INC:common_scripts$
+</body>
+</html>
